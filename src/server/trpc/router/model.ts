@@ -1,7 +1,7 @@
 import { router, publicProcedure } from "../trpc";
 import { z } from "zod";
 
-export const modelsRouter = router({
+export const modelRouter = router({
     createModel: publicProcedure
         .input(z.object({
             name: z.string(),

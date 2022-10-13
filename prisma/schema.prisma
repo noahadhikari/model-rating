@@ -87,7 +87,7 @@ model Rating {
 }
 
 enum IsBestOrientation {
-  no
-  maybe
-  yes
+  NO
+  MAYBE
+  YES
 }
