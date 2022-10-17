@@ -66,12 +66,11 @@ generator js {
 }
 
 model Model {
-  id         Int      @id @default(autoincrement())
-  name       String
-  stlLink    String? // link to stl file
-  binvoxLink String? // link to binvox file
-  vizLink    String? // link to visualization
-  Rating     Rating[]
+  id       Int      @id @default(autoincrement())
+  name     String
+  stlId    String // Google Drive file id of the stl file
+  binvoxId String? // Google Drive file id of the binvox file
+  Rating   Rating[]
 }
 
 // Each model should have a rating

@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { NextPage } from "next";
 import { trpc } from "../../utils/trpc";
 import { useState } from "react";
+import ModelLayout from "../components/ModelLayout";
 
 
 const ModelPage: NextPage = () => {
@@ -15,8 +16,7 @@ const ModelPage: NextPage = () => {
         { enabled: id !== undefined && !isNaN(id),
         
         onSuccess: model => {
-            setSuccess(model !== null);
-            console.log(model);
+            setSuccess((model !== null) && (model !== undefined));
         }
     });
     if (isLoading) {
@@ -25,8 +25,10 @@ const ModelPage: NextPage = () => {
     if (!success) {
         return <h1>Model with id { id } doesn't exist.</h1>
     }
-    return (<p>{model?.name}</p>)
+    return (<ModelLayout model={model!}/>)
 }
+
+
 
 
 export default ModelPage;
