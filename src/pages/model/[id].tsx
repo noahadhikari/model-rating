@@ -28,7 +28,4 @@ const ModelPage: NextPage = () => {
     return (<ModelLayout model={model!}/>)
 }
 
-
-
-
 export default ModelPage;
