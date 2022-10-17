@@ -14,7 +14,7 @@ const ModelPage: NextPage = () => {
     const {isLoading, data: model} = trpc.model.getModel.useQuery(
         { id },
         { enabled: id !== undefined && !isNaN(id),
-        
+        refetchOnWindowFocus: false,
         onSuccess: model => {
             setSuccess((model !== null) && (model !== undefined));
         }
