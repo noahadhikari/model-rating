@@ -20,7 +20,8 @@ export const ratingRouter = router({
                 where: {
                     id: input.modelId
                 }
-            }).then(m => {
+            })
+            .then(m => {
                 if (m) {
                     return ctx.prisma.rating.create({
                         data: {

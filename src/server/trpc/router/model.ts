@@ -19,4 +19,16 @@ export const modelRouter = router({
                 },
             });
         }),
+    
+    getModel: publicProcedure
+        .input(z.object({
+            id: z.number(),
+        }))
+        .query(({ ctx, input }) => {
+            return ctx.prisma.model.findUnique({
+                where: {
+                    id: input.id,
+                },
+            });
+        }),
 });
