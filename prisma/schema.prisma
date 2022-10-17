@@ -68,7 +68,7 @@ generator js {
 model Model {
   id       Int      @id @default(autoincrement())
   name     String
-  stlId    String // Google Drive file id of the stl file
+  stlId    String   @unique // Google Drive file id of the stl file
   binvoxId String? // Google Drive file id of the binvox file
   Rating   Rating[]
 }
