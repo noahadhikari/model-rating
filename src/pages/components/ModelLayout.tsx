@@ -42,7 +42,7 @@ const ModelLayout = (props: ModelLayoutProps) => {
         return floorProps;
     }
 
-    const style = {
+    const modelStyle = {
         top: 0,
         left: 0,
         width: '100vw',
@@ -51,17 +51,20 @@ const ModelLayout = (props: ModelLayoutProps) => {
     }
 
     return (
-        <StlViewer
-            onChange={x => console.log(x)}
-            url={url}
-            style={style}
-            orbitControls
-            shadows
-            showAxes
-            onFinishLoading={setModelDimensions}
-            modelProps={makeModelProps(modelDimensions)}
-            floorProps={makeFloorProps(modelDimensions)}
-        />
+        <>
+            <header>{model.name}</header>
+
+            <StlViewer
+                url={url}
+                style={modelStyle}
+                orbitControls
+                shadows
+                showAxes
+                onFinishLoading={setModelDimensions}
+                modelProps={makeModelProps(modelDimensions)}
+                floorProps={makeFloorProps(modelDimensions)}
+            />
+        </>
     );
 }
 
