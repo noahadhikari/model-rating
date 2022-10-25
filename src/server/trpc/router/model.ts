@@ -1,4 +1,5 @@
 import { router, publicProcedure } from "../trpc";
+import { env } from "../../../env/client.mjs";
 import { z } from "zod";
 
 export const modelRouter = router({
@@ -17,7 +18,7 @@ export const modelRouter = router({
                 },
             });
         }),
-    
+
     getModel: publicProcedure
         .input(z.object({
             id: z.number(),
@@ -29,13 +30,39 @@ export const modelRouter = router({
                 },
             });
         }),
-    
-    getAllModelIds: publicProcedure
-        .query(({ ctx }) => {
-            return ctx.prisma.model.findMany({
-                select: {
-                    id: true,
-                },
-            });
+
+    syncModels: publicProcedure
+        .mutation(async ({ ctx }) => {
+            const FOLDER_ID = "1P0k67JaVkJRyFysUC_G8bKmRQQD_TKhq"
+            const allModelsInDriveFolder = await fetch("https://www.googleapis.com/drive/v3/files?q=\"" +
+                FOLDER_ID + "\"" + "+in+parents&key=" +
+                env.NEXT_PUBLIC_GOOGLE_API_KEY)
+                .then(res => {
+                    res.json()
+                        .then(async (result) => {
+                            const allFiles = result.files.map((file: GoogleDriveFile) => {
+                                return {
+                                    name: file.name,
+                                    stlId: file.id,
+                                }
+                            });
+                            // console.log(allFiles);
+                            await ctx.prisma.model.createMany({
+                                data: allFiles,
+                                skipDuplicates: true,
+                            })
+                        });
+                });
+            
+            
+
+
         }),
 });
+
+interface GoogleDriveFile {
+    kind: string;
+    id: string;
+    name: string;
+    mimeType: string;
+}
