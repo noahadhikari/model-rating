@@ -12,74 +12,74 @@ import CreateRating from "./CreateRating";
 const BASE_URL = "https://www.googleapis.com/drive/v3/files/";
 
 interface ModelLayoutProps {
-    model: Model;
+  model: Model;
 }
 
 const ModelLayout = (props: ModelLayoutProps) => {
-    const { model } = props;
-    // console.log(env);
-    const url = BASE_URL + model.stlId + "?alt=media&key=" + env.NEXT_PUBLIC_GOOGLE_API_KEY;
-    const [modelDimensions, setModelDimensions] = useState<ModelDimensions>();
+  const { model } = props;
+  // console.log(env);
+  const url =
+    BASE_URL + model.stlId + "?alt=media&key=" + env.NEXT_PUBLIC_GOOGLE_API_KEY;
+  const [modelDimensions, setModelDimensions] = useState<ModelDimensions>();
 
-    function makeModelProps(modelDims: ModelDimensions | undefined) {
-        var modelProps = {
-            color: "#15404f",
-            positionX: 0,
-            positionY: 0,
-        }
-        if (modelDims) {
-            modelProps.positionX = modelDims.width;
-            modelProps.positionY = modelDims.length;
-        }
-        return modelProps;
+  function makeModelProps(modelDims: ModelDimensions | undefined) {
+    var modelProps = {
+      color: "#15404f",
+      positionX: 0,
+      positionY: 0,
+    };
+    if (modelDims) {
+      modelProps.positionX = modelDims.width;
+      modelProps.positionY = modelDims.length;
     }
+    return modelProps;
+  }
 
-    function makeFloorProps(modelDims: ModelDimensions | undefined) {
-        var floorProps = {
-            gridWidth: 200,
-            gridLength: 200,
-        }
-        if (modelDims) {
-            floorProps.gridWidth = modelDims.width * 2;
-            floorProps.gridLength = modelDims.length * 2;
-        }
-        return floorProps;
+  function makeFloorProps(modelDims: ModelDimensions | undefined) {
+    var floorProps = {
+      gridWidth: 200,
+      gridLength: 200,
+    };
+    if (modelDims) {
+      floorProps.gridWidth = modelDims.width * 2;
+      floorProps.gridLength = modelDims.length * 2;
     }
+    return floorProps;
+  }
 
-    const modelStyle = {
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#eee',
-    }
+  const modelStyle = {
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#eee",
+  };
 
-    return (
-        <>
-            <Head>
-                <title>Model {model.id}</title>
-                <meta name="description" content="Rate Model" />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-            
-            <div className="modelWrapper">
-                <div className="stlViewer">
-                    <StlViewer
-                        url={url}
-                        style={modelStyle}
-                        orbitControls
-                        shadows
-                        showAxes
-                        onFinishLoading={setModelDimensions}
-                        modelProps={makeModelProps(modelDimensions)}
-                        floorProps={makeFloorProps(modelDimensions)}
-                    />
-                </div>
-                <CreateRating modelId={model.id} modelName={model.name} />
+  return (
+    <>
+      <Head>
+        <title>Model {model.id}</title>
+        <meta name="description" content="Rate Model" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-            </div>
-        </>
-    );
-}
+      <div className="modelWrapper">
+        <div className="stlViewer">
+          <StlViewer
+            url={url}
+            style={modelStyle}
+            orbitControls
+            shadows
+            showAxes
+            onFinishLoading={setModelDimensions}
+            modelProps={makeModelProps(modelDimensions)}
+            floorProps={makeFloorProps(modelDimensions)}
+          />
+        </div>
+        <CreateRating modelId={model.id} modelName={model.name} />
+      </div>
+    </>
+  );
+};
 
 export default ModelLayout;
