@@ -5,6 +5,10 @@ import { trpc } from "../../utils/trpc";
 import { ModelDimensions, StlViewer } from "react-stl-viewer";
 import { env } from "../../env/client.mjs";
 
+import Head from "next/head";
+import CreateModel from "./CreateModel";
+import CreateRating from "./CreateRating";
+
 const BASE_URL = "https://www.googleapis.com/drive/v3/files/";
 
 interface ModelLayoutProps {
@@ -45,25 +49,35 @@ const ModelLayout = (props: ModelLayoutProps) => {
     const modelStyle = {
         top: 0,
         left: 0,
-        width: '100vw',
-        height: '100vh',
-        backgroundColor: '#eeeeee',
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#eee',
     }
 
     return (
         <>
-            <header>{model.name}</header>
+            <Head>
+                <title>Model {model.id}</title>
+                <meta name="description" content="Rate Model" />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+            
+            <div className="modelWrapper">
+                <div className="stlViewer">
+                    <StlViewer
+                        url={url}
+                        style={modelStyle}
+                        orbitControls
+                        shadows
+                        showAxes
+                        onFinishLoading={setModelDimensions}
+                        modelProps={makeModelProps(modelDimensions)}
+                        floorProps={makeFloorProps(modelDimensions)}
+                    />
+                </div>
+                <CreateRating modelId={model.id} modelName={model.name} />
 
-            <StlViewer
-                url={url}
-                style={modelStyle}
-                orbitControls
-                shadows
-                showAxes
-                onFinishLoading={setModelDimensions}
-                modelProps={makeModelProps(modelDimensions)}
-                floorProps={makeFloorProps(modelDimensions)}
-            />
+            </div>
         </>
     );
 }

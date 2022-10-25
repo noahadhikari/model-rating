@@ -29,4 +29,13 @@ export const modelRouter = router({
                 },
             });
         }),
+    
+    getAllModelIds: publicProcedure
+        .query(({ ctx }) => {
+            return ctx.prisma.model.findMany({
+                select: {
+                    id: true,
+                },
+            });
+        }),
 });
