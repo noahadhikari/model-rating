@@ -19,7 +19,7 @@ const ModelLayout = (props: ModelLayoutProps) => {
   const { model } = props;
   // console.log(env);
   const url =
-    BASE_URL + model.stlId + "?alt=media&key=" + env.NEXT_PUBLIC_GOOGLE_API_KEY;
+    BASE_URL + model?.stlId + "?alt=media&key=" + env.NEXT_PUBLIC_GOOGLE_API_KEY;
   const [modelDimensions, setModelDimensions] = useState<ModelDimensions>();
 
   function makeModelProps(modelDims: ModelDimensions | undefined) {
@@ -58,7 +58,7 @@ const ModelLayout = (props: ModelLayoutProps) => {
   return (
     <>
       <Head>
-        <title>Model {model.id}</title>
+        <title>{model?.name}</title>
         <meta name="description" content="Rate Model" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -76,7 +76,7 @@ const ModelLayout = (props: ModelLayoutProps) => {
             floorProps={makeFloorProps(modelDimensions)}
           />
         </div>
-        <CreateRating modelId={model.id} modelName={model.name} />
+        <CreateRating modelId={model?.id} modelName={model?.name} />
       </div>
     </>
   );

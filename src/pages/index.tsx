@@ -7,7 +7,7 @@ import CreateRating from "./components/CreateRating";
 const Home: NextPage = () => {
   const syncMutation = trpc.model.syncModels.useMutation();
   async function handleSync() {
-    await syncMutation.mutateAsync();
+    await syncMutation.mutateAsync().then(() => {alert("Sync complete")});
   }
   return (
     <>
