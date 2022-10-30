@@ -60,5 +60,13 @@ h1 {
 }
 
 .searchTable {
-    display: table-header-group;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.searchModelViewer {
+    width: 100px;
+    height: 100px;
 }

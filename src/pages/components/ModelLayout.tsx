@@ -8,6 +8,7 @@ import { env } from "../../env/client.mjs";
 import Head from "next/head";
 import CreateModel from "./CreateModel";
 import CreateRating from "./CreateRating";
+import ModelVisualizer from "./ModelVisualizer";
 
 const BASE_URL = "https://www.googleapis.com/drive/v3/files/";
 
@@ -17,35 +18,6 @@ interface ModelLayoutProps {
 
 const ModelLayout = (props: ModelLayoutProps) => {
   const { model } = props;
-  // console.log(env);
-  const url =
-    BASE_URL + model?.stlId + "?alt=media&key=" + env.NEXT_PUBLIC_GOOGLE_API_KEY;
-  const [modelDimensions, setModelDimensions] = useState<ModelDimensions>();
-
-  function makeModelProps(modelDims: ModelDimensions | undefined) {
-    var modelProps = {
-      color: "#15404f",
-      positionX: 0,
-      positionY: 0,
-    };
-    if (modelDims) {
-      modelProps.positionX = modelDims.width;
-      modelProps.positionY = modelDims.length;
-    }
-    return modelProps;
-  }
-
-  function makeFloorProps(modelDims: ModelDimensions | undefined) {
-    var floorProps = {
-      gridWidth: 200,
-      gridLength: 200,
-    };
-    if (modelDims) {
-      floorProps.gridWidth = modelDims.width * 2;
-      floorProps.gridLength = modelDims.length * 2;
-    }
-    return floorProps;
-  }
 
   const modelStyle = {
     top: 0,
@@ -58,25 +30,13 @@ const ModelLayout = (props: ModelLayoutProps) => {
   return (
     <>
       <Head>
-        <title>{model?.name}</title>
+        <title>Model {model.id}</title>
         <meta name="description" content="Rate Model" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <div className="modelWrapper">
-        <div className="stlViewer">
-          <StlViewer
-            url={url}
-            style={modelStyle}
-            orbitControls
-            shadows
-            showAxes
-            onFinishLoading={setModelDimensions}
-            modelProps={makeModelProps(modelDimensions)}
-            floorProps={makeFloorProps(modelDimensions)}
-          />
-        </div>
-        <CreateRating modelId={model?.id} modelName={model?.name} />
+        <ModelVisualizer model={model} orbitControls={true} shadows={true} showAxes={true} />
+        <CreateRating modelId={model.id} modelName={model.name} />
       </div>
     </>
   );

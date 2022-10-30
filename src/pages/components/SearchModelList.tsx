@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import { Model } from "@prisma/client";
+import ModelVisualizer from "./ModelVisualizer";
 
 interface SearchModelListProps {
   query: string;
@@ -34,6 +35,7 @@ const SearchModelList = (props: SearchModelListProps) => {
           <a href={`/model/${model.id}`}>{model.id}</a>
         </td>
         <td>{model.name}</td>
+        <td><div className="searchModelViewer"><ModelVisualizer model={model} /></div></td>
       </tr>
     );
   }
@@ -48,7 +50,7 @@ const SearchModelList = (props: SearchModelListProps) => {
           <tr>
             <td>ID</td>
             <td>Name</td>
-            <td></td>
+            <td>Visualization</td>
           </tr>
         </thead>
         <tbody>{data.map(tableRow)}</tbody>

@@ -23,7 +23,6 @@ const CreateModel = () => {
     } catch (error) {
       console.log(error);
     }
-    // console.log(name, stlId, binvoxId, vizLink);
   }
 
   return (
