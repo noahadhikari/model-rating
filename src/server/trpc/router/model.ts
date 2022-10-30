@@ -39,6 +39,7 @@ export const modelRouter = router({
     .input(
       z.object({
         query: z.string(),
+        limit: z.number().optional(),
       })
     )
     .query(({ ctx, input }) => {
@@ -51,6 +52,7 @@ export const modelRouter = router({
         orderBy: {
           id: "asc",
         },
+        take: input.limit,
       });
     }),
 

@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import { trpc } from "../../utils/trpc";
+import { Model } from "@prisma/client";
 
 interface SearchModelListProps {
-  queryString: string;
+  query: string;
+  limit: number;
 }
 const SearchModelList = (props: SearchModelListProps) => {
-  const { queryString } = props;
+  const { query, limit } = props;
+  if (query === "" || limit === 0) {
+    return <></>;
+  }
   const searchQuery = trpc.model.searchModels.useQuery(
-    { query: queryString },
+    { query, limit },
     {
-      enabled: queryString !== "",
+      enabled: query !== "",
       refetchOnWindowFocus: false,
     }
   );
@@ -22,20 +27,31 @@ const SearchModelList = (props: SearchModelListProps) => {
 
   const data = searchQuery.data;
 
-  // Create a table with the models
+  function tableRow(model: Model) {
+    return (
+      <tr key={model.id}>
+        <td>
+          <a href={`/model/${model.id}`}>{model.id}</a>
+        </td>
+        <td>{model.name}</td>
+      </tr>
+    );
+  }
+
   return (
     <>
+      <h2>
+        {data.length} search results for "{query}"
+      </h2>
       <table className="searchTable">
-        <th>
-          <td>Id</td>
-          <td>Name</td>
-        </th>
-        {data.map((model) => (
-          <tr key={model.id}>
-            <td><a href={`/model/${model.id}`}>{model.id}</a></td>
-            <td>{model.name}</td>
+        <thead>
+          <tr>
+            <td>ID</td>
+            <td>Name</td>
+            <td></td>
           </tr>
-        ))}
+        </thead>
+        <tbody>{data.map(tableRow)}</tbody>
       </table>
     </>
   );
