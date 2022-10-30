@@ -10,7 +10,7 @@ div#__next {
 }
 
 a {
-  color: inherit;
+  color: blue;
   text-decoration: none;
 }
 
@@ -57,4 +57,8 @@ header {
 
 h1 {
   margin-top: 0px;
+}
+
+.searchTable {
+    display: table-header-group;
 }

@@ -35,6 +35,25 @@ export const modelRouter = router({
       });
     }),
 
+  searchModels: publicProcedure
+    .input(
+      z.object({
+        query: z.string(),
+      })
+    )
+    .query(({ ctx, input }) => {
+      return ctx.prisma.model.findMany({
+        where: {
+          name: {
+            contains: input.query,
+          },
+        },
+        orderBy: {
+          id: "asc",
+        },
+      });
+    }),
+
   syncModels: publicProcedure.mutation(async ({ ctx }) => {
     const FOLDER_ID = "1P0k67JaVkJRyFysUC_G8bKmRQQD_TKhq";
     const allModelsInDriveFolder = await fetch(
