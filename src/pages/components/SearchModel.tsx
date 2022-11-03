@@ -31,6 +31,7 @@ const SearchModel = () => {
           type="number"
           onChange={(e) => setUserLimitAmount(parseInt(e.target.value))}
           placeholder="limit (default 10)"
+          min={1}
         ></input>
         <button type="submit">Search</button>
       </form>

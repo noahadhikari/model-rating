@@ -8,10 +8,8 @@ interface SearchModelListProps {
   limit: number;
 }
 const SearchModelList = (props: SearchModelListProps) => {
+  const [model, setModel] = useState(null as Model | null);
   const { query, limit } = props;
-  if (query === "" || limit === 0) {
-    return <></>;
-  }
   const searchQuery = trpc.model.searchModels.useQuery(
     { query, limit },
     {
@@ -19,6 +17,9 @@ const SearchModelList = (props: SearchModelListProps) => {
       refetchOnWindowFocus: false,
     }
   );
+  if (query === "" || limit === 0) {
+    return <></>;
+  }
   if (searchQuery.data === undefined) {
     return <></>;
   }
@@ -28,6 +29,11 @@ const SearchModelList = (props: SearchModelListProps) => {
 
   const data = searchQuery.data;
 
+  function handlePreviewClick(previewModel: Model) {
+    if (previewModel !== null) {
+      setModel(previewModel);
+    }
+  }
   function tableRow(model: Model) {
     return (
       <tr key={model.id}>
@@ -35,7 +41,9 @@ const SearchModelList = (props: SearchModelListProps) => {
           <a href={`/model/${model.id}`}>{model.id}</a>
         </td>
         <td>{model.name}</td>
-        <td><div className="searchModelViewer"><ModelVisualizer model={model} /></div></td>
+        <td onClick={(e) => handlePreviewClick(model)}>
+          <div className="previewModel">preview</div>
+        </td>
       </tr>
     );
   }
@@ -45,16 +53,32 @@ const SearchModelList = (props: SearchModelListProps) => {
       <h2>
         {data.length} search results for "{query}"
       </h2>
-      <table className="searchTable">
-        <thead>
-          <tr>
-            <td>ID</td>
-            <td>Name</td>
-            <td>Visualization</td>
-          </tr>
-        </thead>
-        <tbody>{data.map(tableRow)}</tbody>
-      </table>
+      <div className="searchWrapper">
+        <div>
+          <table className="searchTable">
+            <thead>
+              <tr>
+                <td>ID</td>
+                <td>Name</td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody>{data.map(tableRow)}</tbody>
+          </table>
+        </div>
+          <ModelVisualizer
+            model={model}
+            orbitControls={true}
+            shadows={true}
+            showAxes={true}
+            style={{
+              top: 0,
+              left: 0,
+              height: "100%",
+              backgroundColor: "#eee",
+            }}
+          />
+      </div>
     </>
   );
 };

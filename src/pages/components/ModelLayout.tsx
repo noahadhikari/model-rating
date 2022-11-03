@@ -35,7 +35,14 @@ const ModelLayout = (props: ModelLayoutProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="modelWrapper">
-        <ModelVisualizer model={model} orbitControls={true} shadows={true} showAxes={true} />
+        <div className="stlViewer">
+          <ModelVisualizer
+            model={model}
+            orbitControls={true}
+            shadows={true}
+            showAxes={true}
+          />
+        </div>
         <CreateRating modelId={model.id} modelName={model.name} />
       </div>
     </>

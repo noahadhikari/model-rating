@@ -7,14 +7,18 @@ import { env } from "../../env/client.mjs";
 const BASE_URL = "https://www.googleapis.com/drive/v3/files/";
 
 interface ModelVisualizerProps {
-  model: Model;
+  model: Model | null;
   orbitControls?: boolean;
   shadows?: boolean;
   showAxes?: boolean;
+  style?: React.CSSProperties;
 }
 
 const ModelVisualizer = (props: ModelVisualizerProps) => {
-  const { model, orbitControls, shadows, showAxes } = props;
+  const { model, orbitControls, shadows, showAxes, style } = props;
+  if (model === null) {
+    return <></>;
+  }
   // console.log(env);
   const url =
     BASE_URL +
@@ -48,28 +52,28 @@ const ModelVisualizer = (props: ModelVisualizerProps) => {
     return floorProps;
   }
 
-  const modelStyle = {
+  return (
+    <StlViewer
+      url={url}
+      style={style}
+      orbitControls={orbitControls}
+      shadows={shadows}
+      showAxes={showAxes}
+      onFinishLoading={setModelDimensions}
+      modelProps={makeModelProps(modelDimensions)}
+      floorProps={makeFloorProps(modelDimensions)}
+    />
+  );
+};
+
+ModelVisualizer.defaultProps = {
+  style: {
     top: 0,
     left: 0,
     width: "100%",
     height: "100%",
     backgroundColor: "#eee",
-  };
-
-  return (
-    <div className="stlViewer">
-      <StlViewer
-        url={url}
-        style={modelStyle}
-        orbitControls={orbitControls}
-        shadows={shadows}
-        showAxes={showAxes}
-        onFinishLoading={setModelDimensions}
-        modelProps={makeModelProps(modelDimensions)}
-        floorProps={makeFloorProps(modelDimensions)}
-      />
-    </div>
-  );
+  },
 };
 
 export default ModelVisualizer;

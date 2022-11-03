@@ -60,13 +60,37 @@ h1 {
 }
 
 .searchTable {
-  width: 100%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.searchModelViewer {
-    width: 100px;
-    height: 100px;
+.searchWrapper {
+    /* Make the table on the left and the model preview on the right */
+    /* Have the left part take up 50% */
+    /* Have the right part take up 50% */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.searchWrapper > div {
+  width: 50%;
+  height: 100%;
+}
+
+.previewModel {
+    cursor: pointer;
+}
+
+.indexWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
 }
