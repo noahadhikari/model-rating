@@ -6,11 +6,17 @@ import CreateRating from "./components/CreateRating";
 import SearchModel from "./components/SearchModel";
 import React, { useState } from "react";
 
+import { } from "../utils/drive-utils";
+
 const Home: NextPage = () => {
   const syncMutation = trpc.model.syncModels.useMutation();
   async function handleSync() {
-    await syncMutation.mutateAsync().then(() => {
-      alert("Sync complete");
+    // time how long it takes
+    const start = performance.now();
+    await syncMutation.mutateAsync().then((numFiles) => {
+        // alert with how many files were added
+        console.log(numFiles);
+      alert("Added " + numFiles + " files in " + Math.trunc(performance.now() - start) + "ms");
     });
   }
 

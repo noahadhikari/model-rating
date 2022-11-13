@@ -19,6 +19,46 @@ interface ModelLayoutProps {
 const ModelLayout = (props: ModelLayoutProps) => {
   const { model } = props;
 
+  async function handleStlDownload() {
+    if (model.stlId === null) {
+        alert("No stlId for this model");
+        return;
+    }
+    const url =
+      BASE_URL +
+      model.stlId +
+      "?alt=media&key=" +
+      env.NEXT_PUBLIC_GOOGLE_API_KEY;
+    downloadFile(url, model.name + ".stl");
+  }
+
+  async function handleBinvoxDownload() {
+    if (model.binvoxId === null) {
+        alert("No binvox file found for this model");
+        return;
+    }
+    const url =
+      BASE_URL +
+      model.binvoxId +
+      "?alt=media&key=" +
+      env.NEXT_PUBLIC_GOOGLE_API_KEY;
+    downloadFile(url, model.name + ".binvox");
+  }
+
+  // download a file from a url
+  async function downloadFile(url: string, filename: string) {
+    const response = await fetch(url);
+    if (!response.ok) {
+      alert("Error downloading file");
+      return;
+    }
+    const blob = await response.blob();
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
   const modelStyle = {
     top: 0,
     left: 0,
@@ -34,6 +74,11 @@ const ModelLayout = (props: ModelLayoutProps) => {
         <meta name="description" content="Rate Model" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div>
+        <button onClick={handleStlDownload}>Download STL</button>
+        <br />
+        <button onClick={handleBinvoxDownload}>Download Binvox</button>
+      </div>
       <div className="modelWrapper">
         <div className="stlViewer">
           <ModelVisualizer
