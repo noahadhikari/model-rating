@@ -1,7 +1,7 @@
 import { router, publicProcedure } from "../trpc";
 import { env } from "../../../env/client.mjs";
 import { z } from "zod";
-import { getDriveFilesIn } from "../../../utils/drive-utils";
+import { getDriveFilesIn, GoogleDriveFile } from "../../../utils/drive-utils";
 
 export const modelRouter = router({
   createModel: publicProcedure
@@ -91,8 +91,9 @@ export const modelRouter = router({
     ).id;
 
     const stlFiles = await getDriveFilesIn(stlFolder);
+    console.log("stl length: " + stlFiles.length);
     const binvoxFiles = await getDriveFilesIn(binvoxFolder);
-
+    console.log("binvox: " + binvoxFiles.length);
     stlFiles
       .filter((file: GoogleDriveFile) => {
         return file.mimeType === "application/vnd.ms-pki.stl";
@@ -115,7 +116,8 @@ export const modelRouter = router({
         }
       });
 
-    const data = Array.from(nameToId.values()).slice(0, 50);
+    const data = Array.from(nameToId.values());
+    // console.log(data.length);
     data.sort((a, b) => a.name.localeCompare(b.name));
     return await ctx.prisma.model
       .createMany({
@@ -123,18 +125,11 @@ export const modelRouter = router({
         skipDuplicates: true,
       })
       .then((batch) => {
-        console.log("batch: " + batch.count);
+        // console.log("batch: " + batch.count);
         return batch.count;
       });
   }),
 });
-
-interface GoogleDriveFile {
-  kind: string;
-  id: string;
-  name: string;
-  mimeType: string;
-}
 
 interface BinvoxOrStlFile {
   name: string;
