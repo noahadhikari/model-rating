@@ -9,9 +9,8 @@ import React, { useState } from "react";
 import {} from "../utils/drive-utils";
 
 const Home: NextPage = () => {
-  const syncMutation = trpc.model.syncModels.useMutation();
+  const syncMutation = trpc.model.syncModelsInFolder.useMutation();
   async function handleSync() {
-    // time how long it takes
     const start = performance.now();
 
     const allFileFolders = new Map([
@@ -30,13 +29,13 @@ const Home: NextPage = () => {
       ["PARTS_3_5501_10844", "1GOTtPLaxOlAguBdNuKfpeLn8UuA5OCxA"],
     ]);
 
-    const numFiles = Promise.all(
+    Promise.all(
       Array.from(allFileFolders.values()).map((folderId) =>
         syncMutation.mutateAsync({ folderId })
       )
     ).then((values) => {
       let numFiles = values.reduce((a, b) => a + b, 0);
-      alert(`Synced ${numFiles} files in ${performance.now() - start} ms`);
+      alert(`Synced ${numFiles} files in ${Math.trunc(performance.now() - start)} ms`);
     });
   }
 

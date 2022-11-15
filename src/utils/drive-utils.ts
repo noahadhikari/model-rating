@@ -5,7 +5,7 @@ import { env } from "../env/client.mjs";
 // get all the files associated with a specific folder id from drive
 export const getAllDriveFilesIn = async (folderId: string) => {
 
-  // TODO: use the actual drive api
+  // TODO: learn how to use the actual drive api
   let nextPageToken = null;
   let files: GoogleDriveFile[] = [];
   const PAGE_SIZE = 1000;

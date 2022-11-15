@@ -71,6 +71,7 @@ model Model {
   name     String
   stlId    String   @unique // Google Drive file id of the stl file
   binvoxId String? // Google Drive file id of the binvox file
+  folderId String // Google Drive folder id of the model
   Rating   Rating[]
 }
 

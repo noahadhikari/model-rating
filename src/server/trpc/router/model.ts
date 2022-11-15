@@ -13,6 +13,7 @@ export const modelRouter = router({
         name: z.string(),
         stlId: z.string(),
         binvoxId: z.string().optional(),
+        folderId: z.string(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -21,6 +22,7 @@ export const modelRouter = router({
           name: input.name,
           stlId: input.stlId,
           binvoxId: input.binvoxId,
+          folderId: input.folderId,
         },
       });
     }),
@@ -61,15 +63,13 @@ export const modelRouter = router({
     }),
 
   // Syncs the models in the database with the models in the given Google Drive folder.
-  syncModels: publicProcedure
+  syncModelsInFolder: publicProcedure
     .input(
       z.object({
         folderId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const PRISMA_BATCH_SIZE = 5000;
-
       const nameToIds = new Map<string, PrismaModelFile>();
       function trimFileExtension(name: string) {
         return name.split(".").slice(0, -1).join(".");
@@ -106,6 +106,7 @@ export const modelRouter = router({
           nameToIds.set(trimFileExtension(file.name), {
             name: trimFileExtension(file.name),
             stlId: file.id,
+            folderId: input.folderId,
           });
         });
 
@@ -124,7 +125,8 @@ export const modelRouter = router({
       // console.log(data.length);
       data.sort((a, b) => a.name.localeCompare(b.name));
 
-      // partition the data into batches
+      // partition the data into batches to prevent prisma errors
+      const PRISMA_BATCH_SIZE = 5000;
       const batches = [];
       for (let i = 0; i < data.length; i += PRISMA_BATCH_SIZE) {
         batches.push(data.slice(i, i + PRISMA_BATCH_SIZE));
@@ -147,4 +149,5 @@ interface PrismaModelFile {
   name: string;
   stlId: string;
   binvoxId?: string;
+  folderId: string;
 }
