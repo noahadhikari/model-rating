@@ -1,7 +1,7 @@
 import { router, publicProcedure } from "../trpc";
 import { env } from "../../../env/client.mjs";
 import { z } from "zod";
-import { getDriveFilesIn, GoogleDriveFile } from "../../../utils/drive-utils";
+import { getAllDriveFilesIn, GoogleDriveFile } from "../../../utils/drive-utils";
 
 export const modelRouter = router({
   createModel: publicProcedure
@@ -81,19 +81,28 @@ export const modelRouter = router({
       return name.split(".").slice(0, -1).join(".");
     }
 
-    const files = await getDriveFilesIn(FOLDER_ID);
-
+    const files = await getAllDriveFilesIn(FOLDER_ID);
+    if (files.length === 0) {
+        throw new Error("No files found");
+    }
     const stlFolder = files.find((file: GoogleDriveFile) =>
       file.name.includes("rotated_files")
-    ).id;
+    );
+    if (!stlFolder) {
+        throw new Error("No STL folder found");
+    }
+    const stlFolderId = stlFolder.id;
     const binvoxFolder = files.find((file: GoogleDriveFile) =>
       file.name.includes("Binvox_files_default_res")
-    ).id;
-
-    const stlFiles = await getDriveFilesIn(stlFolder);
-    console.log("stl length: " + stlFiles.length);
-    const binvoxFiles = await getDriveFilesIn(binvoxFolder);
-    console.log("binvox: " + binvoxFiles.length);
+    );
+    if (!binvoxFolder) {
+        throw new Error("No STL folder found");
+    }
+    const binvoxFolderId = binvoxFolder.id;
+    const stlFiles = await getAllDriveFilesIn(stlFolderId);
+    // console.log("stl length: " + stlFiles.length);
+    const binvoxFiles = await getAllDriveFilesIn(binvoxFolderId);
+    // console.log("binvox: " + binvoxFiles.length);
     stlFiles
       .filter((file: GoogleDriveFile) => {
         return file.mimeType === "application/vnd.ms-pki.stl";
