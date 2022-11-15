@@ -30,17 +30,14 @@ const Home: NextPage = () => {
       ["PARTS_3_5501_10844", "1GOTtPLaxOlAguBdNuKfpeLn8UuA5OCxA"],
     ]);
 
-    // let numFiles = 0;
-    // for (const folderId of Array.from(allFileFolders.values())) {
-    //     numFiles += await syncMutation.mutateAsync({ folderId });
-    // }
     const numFiles = Promise.all(
       Array.from(allFileFolders.values()).map((folderId) =>
         syncMutation.mutateAsync({ folderId })
       )
-    ).then((values) => values.reduce((a, b) => a + b, 0));
-
-    alert(`Synced ${numFiles} files in ${performance.now() - start} ms`);
+    ).then((values) => {
+      let numFiles = values.reduce((a, b) => a + b, 0);
+      alert(`Synced ${numFiles} files in ${performance.now() - start} ms`);
+    });
   }
 
   return (

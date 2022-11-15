@@ -62,84 +62,85 @@ export const modelRouter = router({
 
   // Syncs the models in the database with the models in the given Google Drive folder.
   syncModels: publicProcedure
-  .input(
-    z.object({
+    .input(
+      z.object({
         folderId: z.string(),
-    })
-  )
-  .mutation(async ({ ctx, input }) => {
-    const PRISMA_BATCH_SIZE = 5000;
-
-    const nameToId = new Map<string, PrismaModelFile>();
-    function trimFileExtension(name: string) {
-      return name.split(".").slice(0, -1).join(".");
-    }
-
-    const files = await getAllDriveFilesIn(input.folderId);
-    if (files.length === 0) {
-      throw new Error("No files found");
-    }
-    const stlFolder = files.find((file: GoogleDriveFile) =>
-      file.name.includes("rotated_files")
-    );
-    if (!stlFolder) {
-      throw new Error("No STL folder found");
-    }
-    const stlFolderId = stlFolder.id;
-    const binvoxFolder = files.find((file: GoogleDriveFile) =>
-      file.name.includes("Binvox_files_default_res")
-    );
-    if (!binvoxFolder) {
-      throw new Error("No STL folder found");
-    }
-    const binvoxFolderId = binvoxFolder.id;
-    const stlFiles = await getAllDriveFilesIn(stlFolderId);
-    // console.log("stl length: " + stlFiles.length);
-    const binvoxFiles = await getAllDriveFilesIn(binvoxFolderId);
-    // console.log("binvox: " + binvoxFiles.length);
-    stlFiles
-      .filter((file: GoogleDriveFile) => {
-        return file.mimeType === "application/vnd.ms-pki.stl";
       })
-      .forEach((file: GoogleDriveFile) => {
-        nameToId.set(trimFileExtension(file.name), {
-          name: trimFileExtension(file.name),
-          stlId: file.id,
-        });
-      });
+    )
+    .mutation(async ({ ctx, input }) => {
+      const PRISMA_BATCH_SIZE = 5000;
 
-    binvoxFiles
-      .filter((file: GoogleDriveFile) => {
-        return file.mimeType === "application/octet-stream";
-      })
-      .forEach((file: GoogleDriveFile) => {
-        const stlAndBinvox = nameToId.get(trimFileExtension(file.name));
-        if (stlAndBinvox) {
-          stlAndBinvox.binvoxId = file.id;
-        }
-      });
+      const nameToIds = new Map<string, PrismaModelFile>();
+      function trimFileExtension(name: string) {
+        return name.split(".").slice(0, -1).join(".");
+      }
 
-    const data = Array.from(nameToId.values());
-    // console.log(data.length);
-    data.sort((a, b) => a.name.localeCompare(b.name));
-
-    // partition the data into batches
-    const batches = [];
-    for (let i = 0; i < data.length; i += PRISMA_BATCH_SIZE) {
-      batches.push(data.slice(i, i + PRISMA_BATCH_SIZE));
-    }
-
-    let totalCount = 0;
-    for (const batch of batches) {
-      totalCount += await ctx.prisma.model
-        .createMany({
-          data: batch,
-          skipDuplicates: true,
+      const files = await getAllDriveFilesIn(input.folderId);
+      if (files.length === 0) {
+        console.warn(`No files found in folder ${input.folderId}, returning`);
+        return 0;
+      }
+      const stlFolder = files.find((file: GoogleDriveFile) =>
+        file.name.includes("rotated_files")
+      );
+      if (!stlFolder) {
+        console.warn(`No STL folder found for id ${input.folderId}`);
+      }
+      const stlFolderId = stlFolder ? stlFolder.id : input.folderId;
+      const binvoxFolder = files.find((file: GoogleDriveFile) =>
+        file.name.includes("Binvox_files_default_res")
+      );
+      if (!binvoxFolder) {
+        console.warn(`No binvox folder found for id ${input.folderId}`);
+      }
+      const binvoxFolderId = binvoxFolder ? binvoxFolder.id : input.folderId;
+      const stlFiles = await getAllDriveFilesIn(stlFolderId);
+      // console.log("stl length: " + stlFiles.length);
+      const binvoxFiles = await getAllDriveFilesIn(binvoxFolderId);
+      // console.log("binvox: " + binvoxFiles.length);
+      stlFiles
+        .filter((file: GoogleDriveFile) => {
+          return file.mimeType === "application/vnd.ms-pki.stl";
         })
-        .then((batch) => batch.count);
-    }
-    return totalCount;
-  }),
+        .forEach((file: GoogleDriveFile) => {
+          nameToIds.set(trimFileExtension(file.name), {
+            name: trimFileExtension(file.name),
+            stlId: file.id,
+          });
+        });
+
+      binvoxFiles
+        .filter((file: GoogleDriveFile) => {
+          return file.mimeType === "application/octet-stream";
+        })
+        .forEach((file: GoogleDriveFile) => {
+          const stlAndBinvox = nameToIds.get(trimFileExtension(file.name));
+          if (stlAndBinvox) {
+            stlAndBinvox.binvoxId = file.id;
+          }
+        });
+
+      const data = Array.from(nameToIds.values());
+      // console.log(data.length);
+      data.sort((a, b) => a.name.localeCompare(b.name));
+
+      // partition the data into batches
+      const batches = [];
+      for (let i = 0; i < data.length; i += PRISMA_BATCH_SIZE) {
+        batches.push(data.slice(i, i + PRISMA_BATCH_SIZE));
+      }
+
+      let totalCount = 0;
+      for (const batch of batches) {
+        totalCount += await ctx.prisma.model
+          .createMany({
+            data: batch,
+            skipDuplicates: true,
+          })
+          .then((batch) => batch.count);
+      }
+      return totalCount;
+    }),
 });
 
 interface PrismaModelFile {
