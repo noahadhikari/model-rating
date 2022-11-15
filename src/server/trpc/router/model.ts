@@ -60,25 +60,14 @@ export const modelRouter = router({
       });
     }),
 
-  // returns the number of files added to the database
-  syncModels: publicProcedure.mutation(async ({ ctx }) => {
-    const URAP3D_STL = "1P0k67JaVkJRyFysUC_G8bKmRQQD_TKhq"; // Urap3d/STL
-    const CAD_PARTS_FOLDER = "1kvid8nlRhSFrnIzrZbjt5uOOuEixPBpN"; // CAD parts folder
-
-    const PARTS_0_1_3950 = "1rIlKhyHHyQ55RW8igH7ywnH0hXMLDwA_"; // done
-    const PARTS_0_3951_5450 = "1cKpVz3Vol2F8-i-V6ixnGkH94Al8VsjP"; // done
-    const PARTS_0_5451_9606 = "1CkJ30EDPfz8g0okPQPW19vkoqzdClYg8"; // done
-    const PARTS_1_1_2500 = "1j_J4PxkVZlfP7kqhP4JwyUG29bYVLbNJ"; // done
-    const PARTS_1_2501_7500 = "155SmkUlp2Z8nVb_VjUgoTNPRMO1jl9gQ"; // done
-    const PARTS_1_7501_11227 = "1ZtDlxIVOq_B6gbryrtXZTQXJpv3bodEv"; // done
-    const PARTS_2_1_3500 = "1Ju7G3RB-KLtC4i8drcGdN2YEcUczueov"; // done
-    const PARTS_2_3501_7500 = "1kUIWVdyryIcETdOQik29T1DPVZAWJ9-a"; // done
-    const PARTS_2_7501_11076 = "1ZwfiDKMlHZgpgZOOJhqBUwQnBFjXQhZd"; // done
-    const PARTS_3_1_5500 = "19rsrWC1dmBtCD9uPJCC5QdwOWD7VYeY7"; // done
-    const PARTS_3_5501_10844 = "1GOTtPLaxOlAguBdNuKfpeLn8UuA5OCxA"; // done
-
-    const FOLDER_ID = PARTS_3_5501_10844;
-
+  // Syncs the models in the database with the models in the given Google Drive folder.
+  syncModels: publicProcedure
+  .input(
+    z.object({
+        folderId: z.string(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
     const PRISMA_BATCH_SIZE = 5000;
 
     const nameToId = new Map<string, PrismaModelFile>();
@@ -86,7 +75,7 @@ export const modelRouter = router({
       return name.split(".").slice(0, -1).join(".");
     }
 
-    const files = await getAllDriveFilesIn(FOLDER_ID);
+    const files = await getAllDriveFilesIn(input.folderId);
     if (files.length === 0) {
       throw new Error("No files found");
     }

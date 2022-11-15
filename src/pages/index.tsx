@@ -6,18 +6,41 @@ import CreateRating from "./components/CreateRating";
 import SearchModel from "./components/SearchModel";
 import React, { useState } from "react";
 
-import { } from "../utils/drive-utils";
+import {} from "../utils/drive-utils";
 
 const Home: NextPage = () => {
   const syncMutation = trpc.model.syncModels.useMutation();
   async function handleSync() {
     // time how long it takes
     const start = performance.now();
-    await syncMutation.mutateAsync().then((numFiles) => {
-        // alert with how many files were added
-        console.log(numFiles);
-      alert("Added " + numFiles + " files in " + Math.trunc(performance.now() - start) + "ms");
-    });
+
+    const allFileFolders = new Map([
+      ["URAP3D_STL", "1P0k67JaVkJRyFysUC_G8bKmRQQD_TKhq"],
+      ["CAD_PARTS_FOLDER", "1kvid8nlRhSFrnIzrZbjt5uOOuEixPBpN"],
+      ["PARTS_0_1_3950", "1rIlKhyHHyQ55RW8igH7ywnH0hXMLDwA_"],
+      ["PARTS_0_3951_5450", "1cKpVz3Vol2F8-i-V6ixnGkH94Al8VsjP"],
+      ["PARTS_0_5451_9606", "1CkJ30EDPfz8g0okPQPW19vkoqzdClYg8"],
+      ["PARTS_1_1_2500", "1j_J4PxkVZlfP7kqhP4JwyUG29bYVLbNJ"],
+      ["PARTS_1_2501_7500", "155SmkUlp2Z8nVb_VjUgoTNPRMO1jl9gQ"],
+      ["PARTS_1_7501_11227", "1ZtDlxIVOq_B6gbryrtXZTQXJpv3bodEv"],
+      ["PARTS_2_1_3500", "1Ju7G3RB-KLtC4i8drcGdN2YEcUczueov"],
+      ["PARTS_2_3501_7500", "1kUIWVdyryIcETdOQik29T1DPVZAWJ9-a"],
+      ["PARTS_2_7501_11076", "1ZwfiDKMlHZgpgZOOJhqBUwQnBFjXQhZd"],
+      ["PARTS_3_1_5500", "19rsrWC1dmBtCD9uPJCC5QdwOWD7VYeY7"],
+      ["PARTS_3_5501_10844", "1GOTtPLaxOlAguBdNuKfpeLn8UuA5OCxA"],
+    ]);
+
+    // let numFiles = 0;
+    // for (const folderId of Array.from(allFileFolders.values())) {
+    //     numFiles += await syncMutation.mutateAsync({ folderId });
+    // }
+    const numFiles = Promise.all(
+      Array.from(allFileFolders.values()).map((folderId) =>
+        syncMutation.mutateAsync({ folderId })
+      )
+    ).then((values) => values.reduce((a, b) => a + b, 0));
+
+    alert(`Synced ${numFiles} files in ${performance.now() - start} ms`);
   }
 
   return (

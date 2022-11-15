@@ -15,16 +15,15 @@ interface ModelVisualizerProps {
 }
 
 const ModelVisualizer = (props: ModelVisualizerProps) => {
+  const INITIAL_SCALE = 10;
+  const eps = 0.1;
+
   const { model, orbitControls, shadows, showAxes, style } = props;
   if (model === null) {
     return <></>;
   }
   // console.log(env);
-  const url =
-    BASE_URL +
-    model?.stlId +
-    "?alt=media&key=" +
-    env.NEXT_PUBLIC_GOOGLE_API_KEY;
+  const url = `${BASE_URL}${model.stlId}?alt=media&key=${env.NEXT_PUBLIC_GOOGLE_API_KEY}`;
   const [modelDimensions, setModelDimensions] = useState<ModelDimensions>();
 
   function makeModelProps(modelDims: ModelDimensions | undefined) {
@@ -32,22 +31,25 @@ const ModelVisualizer = (props: ModelVisualizerProps) => {
       color: "#15404f",
       positionX: 0,
       positionY: 0,
+      scale: INITIAL_SCALE,
     };
     if (modelDims) {
-      modelProps.positionX = modelDims.width;
-      modelProps.positionY = modelDims.length;
+      modelProps.scale = INITIAL_SCALE / (modelDims.boundingRadius + eps);
+      modelProps.positionX = modelDims.width * modelProps.scale;
+      modelProps.positionY = modelDims.length * modelProps.scale;
     }
     return modelProps;
   }
 
   function makeFloorProps(modelDims: ModelDimensions | undefined) {
     let floorProps = {
-      gridWidth: 200,
-      gridLength: 200,
+      gridWidth: 20,
+      gridLength: 20,
     };
     if (modelDims) {
-      floorProps.gridWidth = modelDims.width * 2;
-      floorProps.gridLength = modelDims.length * 2;
+      let scale = INITIAL_SCALE / (modelDims.boundingRadius + eps);
+      floorProps.gridWidth = modelDims.width * 2 * scale;
+      floorProps.gridLength = modelDims.length * 2 * scale;
     }
     return floorProps;
   }
