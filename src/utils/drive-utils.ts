@@ -11,17 +11,17 @@ export const getAllDriveFilesIn = async (folderId: string) => {
   // return response.data;
 
   // TODO: use the actual drive api
-  var nextPageToken = null;
-  var files: GoogleDriveFile[] = [];
+  let nextPageToken = null;
+  let files: GoogleDriveFile[] = [];
   const PAGE_SIZE = 1000;
-  var i = 0;
+  let i = 0;
   do {
     console.log(`page ${i} for ${folderId}`);
-    var query = `https://www.googleapis.com/drive/v3/files?q=%22${folderId}%22+in+parents&pageSize=${PAGE_SIZE}&key=${env.NEXT_PUBLIC_GOOGLE_API_KEY}`;
+    let query = `https://www.googleapis.com/drive/v3/files?q=%22${folderId}%22+in+parents&pageSize=${PAGE_SIZE}&key=${env.NEXT_PUBLIC_GOOGLE_API_KEY}`;
     if (nextPageToken) {
       query += `&pageToken=${nextPageToken}`;
     }
-    console.log(query);
+    // console.log(query);
     nextPageToken = await fetch(query).then((res) => {
       return res.json().then((data) => {
         files = files.concat(data.files);

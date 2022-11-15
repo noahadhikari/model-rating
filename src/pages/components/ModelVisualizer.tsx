@@ -28,7 +28,7 @@ const ModelVisualizer = (props: ModelVisualizerProps) => {
   const [modelDimensions, setModelDimensions] = useState<ModelDimensions>();
 
   function makeModelProps(modelDims: ModelDimensions | undefined) {
-    var modelProps = {
+    let modelProps = {
       color: "#15404f",
       positionX: 0,
       positionY: 0,
@@ -41,7 +41,7 @@ const ModelVisualizer = (props: ModelVisualizerProps) => {
   }
 
   function makeFloorProps(modelDims: ModelDimensions | undefined) {
-    var floorProps = {
+    let floorProps = {
       gridWidth: 200,
       gridLength: 200,
     };
