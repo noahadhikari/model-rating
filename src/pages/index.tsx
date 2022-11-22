@@ -40,7 +40,7 @@ const Home: NextPage = () => {
         syncMutation.mutateAsync({ folderId })
       )
     ).then((values) => {
-      let numFiles = values.reduce((a, b) => a + b, 0);
+      const numFiles = values.reduce((a, b) => a + b, 0);
       setIsSyncing(false);
       alert(
         `Synced ${numFiles} files in ${Math.trunc(

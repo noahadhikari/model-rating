@@ -19,15 +19,16 @@ const ModelVisualizer = (props: ModelVisualizerProps) => {
   const EPS = 0.1;
 
   const { model, orbitControls, shadows, showAxes, style } = props;
-  if (model === null) {
+  const [modelDimensions, setModelDimensions] = useState<ModelDimensions>();
+
+  if (!model) {
     return <></>;
   }
   // console.log(env);
   const url = `${BASE_URL}${model.stlId}?alt=media&key=${env.NEXT_PUBLIC_GOOGLE_API_KEY}`;
-  const [modelDimensions, setModelDimensions] = useState<ModelDimensions>();
 
   function makeModelProps(modelDims: ModelDimensions | undefined) {
-    let modelProps = {
+    const modelProps = {
       color: "#15404f",
       positionX: 0,
       positionY: 0,
@@ -42,12 +43,12 @@ const ModelVisualizer = (props: ModelVisualizerProps) => {
   }
 
   function makeFloorProps(modelDims: ModelDimensions | undefined) {
-    let floorProps = {
+    const floorProps = {
       gridWidth: 20,
       gridLength: 20,
     };
     if (modelDims) {
-      let scale = INITIAL_SCALE / (modelDims.boundingRadius + EPS);
+      const scale = INITIAL_SCALE / (modelDims.boundingRadius + EPS);
       floorProps.gridWidth = Math.max(
         floorProps.gridWidth,
         modelDims.width * 2 * scale

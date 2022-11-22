@@ -18,11 +18,14 @@ interface ModelLayoutProps {
 
 const ModelLayout = (props: ModelLayoutProps) => {
   const { model } = props;
+  if (!model) {
+    return <></>;
+  }
 
   async function handleStlDownload() {
     if (model.stlId === null) {
-        alert("No stlId for this model");
-        return;
+      alert("No stlId for this model");
+      return;
     }
     const url =
       BASE_URL +
@@ -34,8 +37,8 @@ const ModelLayout = (props: ModelLayoutProps) => {
 
   async function handleBinvoxDownload() {
     if (model.binvoxId === null) {
-        alert("No binvox file found for this model");
-        return;
+      alert("No binvox file found for this model");
+      return;
     }
     const url =
       BASE_URL +
