@@ -5,6 +5,7 @@ const CreateModel = () => {
   const [name, setName] = useState("");
   const [stlId, setStlId] = useState("");
   const [binvoxId, setBinvoxId] = useState("");
+  const [folderId, setFolderId] = useState("");
 
   const createModelMutation = trpc.model.createModel.useMutation();
 
@@ -16,6 +17,7 @@ const CreateModel = () => {
           name,
           stlId,
           binvoxId,
+          folderId,
         })
         .then((model) => {
           console.log(model);
@@ -51,6 +53,14 @@ const CreateModel = () => {
           <input
             value={binvoxId}
             onChange={(e) => setBinvoxId(e.target.value)}
+            type="text"
+          />
+        </div>
+        <div>
+          <label>Google Drive Parent Folder ID</label>
+          <input
+            value={folderId}
+            onChange={(e) => setFolderId(e.target.value)}
             type="text"
           />
         </div>
