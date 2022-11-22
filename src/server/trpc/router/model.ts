@@ -1,6 +1,7 @@
 import { router, publicProcedure } from "../trpc";
 import { env } from "../../../env/client.mjs";
 import { z } from "zod";
+import { Prisma, PrismaClient } from "@prisma/client";
 import {
   getAllDriveFilesIn,
   GoogleDriveFile,
@@ -126,20 +127,30 @@ export const modelRouter = router({
       data.sort((a, b) => a.name.localeCompare(b.name));
 
       // partition the data into batches to prevent prisma errors
-      const PRISMA_BATCH_SIZE = 5000;
-      const batches = [];
-      for (let i = 0; i < data.length; i += PRISMA_BATCH_SIZE) {
-        batches.push(data.slice(i, i + PRISMA_BATCH_SIZE));
-      }
+      const BATCH_SIZE = 5000;
 
       let totalCount = 0;
-      for (const batch of batches) {
-        totalCount += await ctx.prisma.model
-          .createMany({
-            data: batch,
-            skipDuplicates: true,
-          })
-          .then((batch) => batch.count);
+      for (let i = 0; i < data.length; i += BATCH_SIZE) {
+        const batch: Array<PrismaModelFile> = data.slice(i, i + BATCH_SIZE);
+        try {
+          totalCount += await ctx.prisma.model
+            .createMany({
+              data: batch,
+              skipDuplicates: true,
+            })
+            .then((batch: Prisma.BatchPayload) => batch.count);
+        } catch (e) {
+          if (e instanceof Prisma.PrismaClientKnownRequestError) {
+            if (e.code === "P2034") {
+              // deadlock or write conflict
+              console.warn("Deadlock detected, retrying this batch");
+              i -= BATCH_SIZE;
+              continue;
+            }
+          } else {
+            throw e;
+          }
+        }
       }
       return totalCount;
     }),
