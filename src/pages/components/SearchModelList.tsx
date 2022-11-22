@@ -29,7 +29,8 @@ const SearchModelList = (props: SearchModelListProps) => {
 
   const data = searchQuery.data;
 
-  function handlePreviewClick(previewModel: Model) {
+  function handlePreviewClick(e: React.MouseEvent<HTMLTableCellElement, MouseEvent>, previewModel: Model) {
+    e.preventDefault();
     if (previewModel !== null) {
       setModel(previewModel);
     }
@@ -41,7 +42,7 @@ const SearchModelList = (props: SearchModelListProps) => {
           <a href={`/model/${model.id}`}>{model.id}</a>
         </td>
         <td>{model.name}</td>
-        <td onClick={(e) => handlePreviewClick(model)}>
+        <td onClick={(e) => handlePreviewClick(e, model)}>
           <div className="previewModel">preview</div>
         </td>
       </tr>
@@ -66,18 +67,18 @@ const SearchModelList = (props: SearchModelListProps) => {
             <tbody>{data.map(tableRow)}</tbody>
           </table>
         </div>
-          <ModelVisualizer
-            model={model}
-            orbitControls={true}
-            shadows={true}
-            showAxes={true}
-            style={{
-              top: 0,
-              left: 0,
-              height: "100%",
-              backgroundColor: "#eee",
-            }}
-          />
+        <ModelVisualizer
+          model={model}
+          orbitControls={true}
+          shadows={true}
+          showAxes={true}
+          style={{
+            top: 0,
+            left: 0,
+            height: "100%",
+            backgroundColor: "#eee",
+          }}
+        />
       </div>
     </>
   );

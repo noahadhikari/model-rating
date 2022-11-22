@@ -14,14 +14,14 @@ const SearchModel = () => {
     if (userLimitAmount !== 0) {
       setSearchModelListLimit(userLimitAmount);
     } else {
-        setSearchModelListLimit(10);
+      setSearchModelListLimit(10);
     }
   }
 
   return (
-    <>
+    <div className="searchModelWrapper">
+      <h1>Search Models by Name</h1>
       <form onSubmit={handleSearch}>
-        <h1>Search Models by Name</h1>
         <input
           type="text"
           onChange={(e) => setUserInputString(e.target.value)}
@@ -39,7 +39,7 @@ const SearchModel = () => {
         query={searchModelListString}
         limit={searchModelListLimit}
       />
-    </>
+    </div>
   );
 };
 

@@ -10,7 +10,13 @@ import {} from "../utils/drive-utils";
 
 const Home: NextPage = () => {
   const syncMutation = trpc.model.syncModelsInFolder.useMutation();
+  const [isSyncing, setIsSyncing] = useState(false);
   async function handleSync() {
+    if (isSyncing) {
+      alert("Sync already in progress");
+      return;
+    }
+    setIsSyncing(true);
     const start = performance.now();
 
     const allFileFolders = new Map([
@@ -35,7 +41,12 @@ const Home: NextPage = () => {
       )
     ).then((values) => {
       let numFiles = values.reduce((a, b) => a + b, 0);
-      alert(`Synced ${numFiles} files in ${Math.trunc(performance.now() - start)} ms`);
+      setIsSyncing(false);
+      alert(
+        `Synced ${numFiles} files in ${Math.trunc(
+          performance.now() - start
+        )} ms`
+      );
     });
   }
 
@@ -47,10 +58,13 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="indexWrapper">
-        <button name="syncModels" onClick={handleSync}>
-          Sync Models with Google Drive (<b>use sparingly!</b>)
-        </button>
+        <header>URAP 3D Model Rating</header>
         <SearchModel />
+        <footer>
+          <button name="syncModels" onClick={handleSync}>
+            Sync Models with Google Drive (<b>use sparingly!</b>)
+          </button>
+        </footer>
       </div>
     </>
   );

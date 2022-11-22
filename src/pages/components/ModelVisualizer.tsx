@@ -16,7 +16,7 @@ interface ModelVisualizerProps {
 
 const ModelVisualizer = (props: ModelVisualizerProps) => {
   const INITIAL_SCALE = 10;
-  const eps = 0.1;
+  const EPS = 0.1;
 
   const { model, orbitControls, shadows, showAxes, style } = props;
   if (model === null) {
@@ -34,7 +34,7 @@ const ModelVisualizer = (props: ModelVisualizerProps) => {
       scale: INITIAL_SCALE,
     };
     if (modelDims) {
-      modelProps.scale = INITIAL_SCALE / (modelDims.boundingRadius + eps);
+      modelProps.scale = INITIAL_SCALE / (modelDims.boundingRadius + EPS);
       modelProps.positionX = modelDims.width * modelProps.scale;
       modelProps.positionY = modelDims.length * modelProps.scale;
     }
@@ -47,9 +47,15 @@ const ModelVisualizer = (props: ModelVisualizerProps) => {
       gridLength: 20,
     };
     if (modelDims) {
-      let scale = INITIAL_SCALE / (modelDims.boundingRadius + eps);
-      floorProps.gridWidth = modelDims.width * 2 * scale;
-      floorProps.gridLength = modelDims.length * 2 * scale;
+      let scale = INITIAL_SCALE / (modelDims.boundingRadius + EPS);
+      floorProps.gridWidth = Math.max(
+        floorProps.gridWidth,
+        modelDims.width * 2 * scale
+      );
+      floorProps.gridLength = Math.max(
+        floorProps.gridLength,
+        modelDims.length * 2 * scale
+      );
     }
     return floorProps;
   }
