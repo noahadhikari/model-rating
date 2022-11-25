@@ -9,6 +9,7 @@ import Head from "next/head";
 import CreateModel from "./CreateModel";
 import CreateRating from "./CreateRating";
 import ModelVisualizer from "./ModelVisualizer";
+import HeaderBar from "./HeaderBar";
 
 const BASE_URL = "https://www.googleapis.com/drive/v3/files/";
 
@@ -67,21 +68,13 @@ const ModelLayout = (props: ModelLayoutProps) => {
     left: 0,
     width: "100%",
     height: "100%",
-    backgroundColor: "#eee",
+    backgroundColor: "#ddd",
   };
 
   return (
     <>
-      <Head>
-        <title>Model {model.id}</title>
-        <meta name="description" content="Rate Model" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <div>
-        <button onClick={handleStlDownload}>Download STL</button>
-        <br />
-        <button onClick={handleBinvoxDownload}>Download Binvox</button>
-      </div>
+      <HeaderBar />
+
       <div className="modelWrapper">
         <div className="stlViewer">
           <ModelVisualizer
@@ -91,7 +84,12 @@ const ModelLayout = (props: ModelLayoutProps) => {
             showAxes={true}
           />
         </div>
-        <CreateRating modelId={model.id} modelName={model.name} />
+        <div className="ratingWrapper">
+          <CreateRating modelId={model.id} modelName={model.name} />
+          <br />
+          <button onClick={handleStlDownload}>Download STL</button>
+          <button onClick={handleBinvoxDownload}>Download Binvox</button>
+        </div>
       </div>
     </>
   );

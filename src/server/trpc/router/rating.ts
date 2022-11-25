@@ -10,7 +10,8 @@ export const ratingRouter = router({
             author: z.string(),
             bestPossible: z.nativeEnum(IsBestOrientation),
             quality: z.number().min(-2).max(2),
-            reasoning: z.string().optional(),
+            reasoningPositive: z.string().optional(),
+            reasoningNegative: z.string().optional(),
 
         }))
         .mutation(({ ctx, input }) => {
@@ -33,7 +34,8 @@ export const ratingRouter = router({
                             author: input.author,
                             bestPossible: input.bestPossible,
                             quality: input.quality,
-                            reasoning: input.reasoning,
+                            reasoningPositive: input.reasoningPositive,
+                            reasoningNegative: input.reasoningNegative,
                         },
                     });
                 } else {

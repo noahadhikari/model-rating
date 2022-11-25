@@ -7,6 +7,7 @@ import SearchModel from "./components/SearchModel";
 import React, { useState } from "react";
 
 import {} from "../utils/drive-utils";
+import HeaderBar from "./components/HeaderBar";
 
 const Home: NextPage = () => {
   const syncMutation = trpc.model.syncModelsInFolder.useMutation();
@@ -58,7 +59,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="indexWrapper">
-        <header>URAP 3D Model Rating</header>
+        <HeaderBar />
         <SearchModel />
         <footer>
           <button name="syncModels" onClick={handleSync}>

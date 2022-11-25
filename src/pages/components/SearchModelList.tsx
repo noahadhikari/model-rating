@@ -76,7 +76,7 @@ const SearchModelList = (props: SearchModelListProps) => {
             top: 0,
             left: 0,
             height: "100%",
-            backgroundColor: "#eee",
+            backgroundColor: "#ddd",
           }}
         />
       </div>

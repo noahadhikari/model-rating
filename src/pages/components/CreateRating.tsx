@@ -13,7 +13,8 @@ const CreateRating = (props: CreateRatingProps) => {
     IsBestOrientation.MAYBE
   );
   const [quality, setQuality] = useState<number>(0);
-  const [reasoning, setReasoning] = useState("");
+  const [reasoningPositive, setReasoningPositive] = useState("");
+  const [reasoningNegative, setReasoningNegative] = useState("");
 
   const createRatingMutation = trpc.rating.createRating.useMutation({
     onSuccess: (rating) => {
@@ -33,7 +34,8 @@ const CreateRating = (props: CreateRatingProps) => {
       author,
       bestPossible,
       quality,
-      reasoning,
+      reasoningPositive,
+      reasoningNegative,
     });
     // console.log(modelId, author, bestPossible, quality, reasoning);
   }
@@ -41,61 +43,53 @@ const CreateRating = (props: CreateRatingProps) => {
   return (
     <div className="createRating">
       <form onSubmit={handleSubmit}>
-        <h1>Rate {props.modelName}</h1>
-        <div>
-          <label>Name:</label>
-          <br />
-          <input
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-            type="text"
-            placeholder="Enter your full name"
-            required
-          />
-        </div>
-        {/* <div>
-                    <label>Model ID:</label>
-                    <input value={modelId} onChange={e => setModelId(parseInt(e.target.value))} type="number" placeholder="Enter the model id" />
-                </div> */}
-        <div>
-          <label>Best orientation?</label>
-          <br />
-          <select
-            value={bestPossible}
-            onChange={(e) =>
-              setBestPossible(e.target.value as IsBestOrientation)
-            }
-          >
-            {/* map over the values of IsBestOrientation and use those as options */}
-            {Object.values(IsBestOrientation).map((value) => (
-              <option key={value} value={value}>
-                {value.toLowerCase()}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label>Quality:</label>
-          <br />
-          <input
-            value={quality}
-            onChange={(e) => setQuality(parseInt(e.target.value))}
-            type="number"
-            min="-2"
-            max="2"
-            required
-          />
-        </div>
-        <div>
-          <label>Reasoning:</label>
-          <br />
-          <input
-            value={reasoning}
-            onChange={(e) => setReasoning(e.target.value)}
-            type="text"
-            placeholder="Why did you give this rating?"
-          />
-        </div>
+        <h1 className="ratingHeader">Rate model {props.modelId}</h1>
+        <label>Name:</label>
+        <br />
+        <input
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+          type="text"
+          placeholder="Enter your full name"
+          required
+        />
+        <label>Best orientation?</label>
+        <br />
+        <select
+          value={bestPossible}
+          onChange={(e) => setBestPossible(e.target.value as IsBestOrientation)}
+        >
+          {/* map over the values of IsBestOrientation and use those as options */}
+          {Object.values(IsBestOrientation).map((value) => (
+            <option key={value} value={value}>
+              {value.toLowerCase()}
+            </option>
+          ))}
+        </select>
+        <label>Quality:</label>
+        <br />
+        <input
+          value={quality}
+          onChange={(e) => setQuality(parseInt(e.target.value))}
+          type="number"
+          min="-2"
+          max="2"
+          required
+        />
+        <label>Reasoning (positive):</label>
+        <br />
+        <input
+          value={reasoningPositive}
+          onChange={(e) => setReasoningPositive(e.target.value)}
+          type="text"
+        />
+        <label>Reasoning (negative):</label>
+        <br />
+        <input
+          value={reasoningNegative}
+          onChange={(e) => setReasoningNegative(e.target.value)}
+          type="text"
+        />
         <button type="submit">Submit</button>
       </form>
     </div>

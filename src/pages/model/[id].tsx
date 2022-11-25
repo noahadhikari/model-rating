@@ -3,6 +3,7 @@ import { NextPage } from "next";
 import { trpc } from "../../utils/trpc";
 import { useState } from "react";
 import ModelLayout from "../components/ModelLayout";
+import HeaderBar from "../components/HeaderBar";
 
 const ModelPage: NextPage = () => {
   const [success, setSuccess] = useState(true);

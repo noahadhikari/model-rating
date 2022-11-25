@@ -22,17 +22,7 @@ a {
   height: 100vh;
 }
 
-header {
-  background-color: #fff;
-  font-size: 26px;
-  font-weight: 600;
-  text-align: center;
-}
-
 .modelWrapper {
-  /* make the form on the right and the model on the left */
-  /* Have the left part take up 70% */
-  /* Have the right part take up 30% */
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -45,14 +35,35 @@ header {
 .stlViewer {
   width: 70%;
   height: 100%;
-  background-color: #000;
 }
 
 .createRating {
   padding-left: 20px;
   width: 30%;
-  height: 100%;
   background-color: #fff;
+}
+
+.createRating > form > label {
+    white-space: nowrap;
+}
+
+.ratingHeader {
+    white-space: nowrap;
+    font-weight: 600;
+    margin-top: 20px;
+}
+
+.ratingWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: baseline;
+    height: 100%;
+    width: 30%;
+}
+
+.ratingWrapper > button {
+    margin-left: 20px;
+    width: fit-content;
 }
 
 h1 {
@@ -96,12 +107,17 @@ h1 {
   align-items: center;
   height: 100%;
 }
-.indexWrapper > header {
-  font-size: 70px;
+
+.headerBar {
+  text-align: center;
+  font-size: 40px;
   background-color: #e5e5e5;
+  font-weight: bold;
   width: 100%;
   padding: 10px;
+  cursor: pointer;
 }
+
 .indexWrapper > footer {
   /* align items right */
   /* make the footer take up 100% of the width */
