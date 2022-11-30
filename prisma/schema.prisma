@@ -84,7 +84,8 @@ model Rating {
 
   bestPossible IsBestOrientation?
   quality      Int // rating between -2 and 2, validated client-side
-  reasoning    String?
+  reasoningPositive    String?
+  reasoningNegative    String?
 }
 
 enum IsBestOrientation {

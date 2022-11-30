@@ -16,9 +16,11 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.44.0
   '@typescript-eslint/parser': ^5.44.0
   child_process: ^1.0.2
+  csv-parse: ^5.3.2
   dotenv: ^16.0.3
   eslint: ^8.28.0
   eslint-config-next: 12.3.1
+  eslint-plugin-react-hooks: ^4.6.0
   googleapis: ^105.0.0
   next: 12.3.1
   next-auth: ^4.17.0
@@ -45,6 +47,7 @@ dependencies:
   '@trpc/react': 10.0.0-proxy-beta.17_olp25o6jhkybqoehj6xcxz65qa
   '@trpc/server': 10.0.0-proxy-beta.17
   child_process: 1.0.2
+  csv-parse: 5.3.2
   dotenv: 16.0.3
   googleapis: 105.0.0
   next: 12.3.1_biqbaboplfbrettd7655fr4n2y
@@ -66,6 +69,7 @@ devDependencies:
   '@typescript-eslint/parser': 5.44.0_hsf322ms6xhhd4b5ne6lb74y4a
   eslint: 8.28.0
   eslint-config-next: 12.3.1_hsf322ms6xhhd4b5ne6lb74y4a
+  eslint-plugin-react-hooks: 4.6.0_eslint@8.28.0
   prism: 4.1.2_react@18.2.0
   prisma: 4.6.1
   typescript: 4.9.3
@@ -897,6 +901,10 @@ packages:
 
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
+
+  /csv-parse/5.3.2:
+    resolution: {integrity: sha512-3jQ/JMs+voKxr4vwpmElS1d37J0o6rQdQyEKoPyA9HG8fYczpLaBJnmp5ykvkXL8ZeEGVP0qwLU645BZVykXKw==}
+    dev: false
 
   /damerau-levenshtein/1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}

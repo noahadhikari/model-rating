@@ -11,6 +11,7 @@ import HeaderBar from "./components/HeaderBar";
 
 const Home: NextPage = () => {
   const syncMutation = trpc.model.syncModelsInFolder.useMutation();
+  const nextFewestRated = trpc.model.getFewestRatingModel.useQuery({});
   const [isSyncing, setIsSyncing] = useState(false);
 
   const allFileFolders = new Map([
@@ -28,7 +29,7 @@ const Home: NextPage = () => {
     ["PARTS_3_1_5500", "19rsrWC1dmBtCD9uPJCC5QdwOWD7VYeY7"],
     ["PARTS_3_5501_10844", "1GOTtPLaxOlAguBdNuKfpeLn8UuA5OCxA"],
   ]);
-  
+
   async function handleSync() {
     if (isSyncing) {
       alert("Sync already in progress");
@@ -51,6 +52,20 @@ const Home: NextPage = () => {
     });
   }
 
+  async function handleNextFewestRated() {
+    if (
+      nextFewestRated &&
+      nextFewestRated.data &&
+      nextFewestRated.data.length > 0 &&
+      nextFewestRated.data[0]
+    ) {
+      // go to the next fewest rated model page
+      window.location.href = `/model/${nextFewestRated.data[0].id}`;
+    } else {
+      alert("Error finding model");
+    }
+  }
+
   return (
     <>
       <Head>
@@ -62,6 +77,9 @@ const Home: NextPage = () => {
         <HeaderBar />
         <SearchModel />
         <footer>
+          <button name="nextFewestRated" onClick={handleNextFewestRated}>
+            Jump to model with fewest ratings
+          </button>
           <button name="syncModels" onClick={handleSync}>
             Sync Models with Google Drive (<b>use sparingly!</b>)
           </button>

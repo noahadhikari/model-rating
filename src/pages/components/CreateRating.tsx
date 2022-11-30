@@ -66,7 +66,7 @@ const CreateRating = (props: CreateRatingProps) => {
             </option>
           ))}
         </select>
-        <label>Quality:</label>
+        <label>Quality (-2 to 2):</label>
         <br />
         <input
           value={quality}

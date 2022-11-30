@@ -154,6 +154,23 @@ export const modelRouter = router({
       }
       return totalCount;
     }),
+
+  getFewestRatingModel: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().optional(),
+      })
+    )
+    .query(({ ctx, input }) => {
+      return ctx.prisma.model.findMany({
+        take: input.limit || 1,
+        orderBy: {
+          Rating: {
+            _count: "desc",
+          },
+        },
+      });
+    }),
 });
 
 interface PrismaModelFile {
