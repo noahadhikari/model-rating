@@ -9,7 +9,7 @@ You'll need a bash terminal. If you're on Windows, this will be [Git Bash](https
 
 If you're unfamiliar with bash commands, CS61B has a quick-and-easy starting guide [here](https://fa22.datastructur.es/materials/lab/lab01/#the-terminal).
 
-If you're unfamiliar with Git, there's a guide [here](https://fa22.datastructur.es/materials/guides/git/). This is pretty dense and probably overkill, but you should know what `add`, `commit`, and `push` do.
+If you're unfamiliar with Git, there's a guide [here](https://fa22.datastructur.es/materials/guides/git/). This is pretty dense and probably overkill, but you should know what `add`, `commit`, and `push` do if you plan on contributing.
 
 I also recommend installing [VSCode](https://code.visualstudio.com/) as your code editor. It has a lot of support due to its popularity, and is generally a good editor for many languages, especially TypeScript.
 
