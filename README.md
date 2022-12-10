@@ -44,6 +44,12 @@ Then, open `http://localhost:3000` in your browser.
 
 The app is also deployed on Vercel, which is a cloud platform for hosting static websites. You can view the app at https://model-rating.vercel.app/ (production) or https://model-rating-noahadhikari.vercel.app/ (staging).
 
+## How is the database structured?
+The database consists of two main tables, one for models and one for ratings. Each model has an id, a name, its Google Drive STL file ID, and its Google Drive binvox ID, as well as some other metadata information. 
+
+The ratings are related to a specific model, so that one model can have many ratings. Each rating has an associated model ID, user name, rating, reasoning, and some other metadata.
+
+On this website, when the models are queried, the STL file is fetched from that Google Drive ID and is used to render the model in the browser. This can also be used to download the models. This allows us to store potentially millions of models while using very little space in our database, because all we need to store are short IDs corresponding to the drive files.
 
 ## How is this app structured?
 This is built using Next.js, which is a React framework. React is a JavaScript library for building user interfaces. TypeScript is essentially JavaScript but statically typed, which makes bugs easier to catch. 
