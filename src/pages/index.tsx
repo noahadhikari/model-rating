@@ -28,6 +28,9 @@ const Home: NextPage = () => {
     ["PARTS_2_7501_11076", "1ZwfiDKMlHZgpgZOOJhqBUwQnBFjXQhZd"],
     ["PARTS_3_1_5500", "19rsrWC1dmBtCD9uPJCC5QdwOWD7VYeY7"],
     ["PARTS_3_5501_10844", "1GOTtPLaxOlAguBdNuKfpeLn8UuA5OCxA"],
+    ["PARTS_4_1_5500", "1xXbNZ2fGW_9wz3ezM84ckqCq91cTySwR"],
+    ["PARTS_4_5501_8000", "1I5fMkCzS26gT4yjnd5VIB80ga2glWzNc"],
+    ["PARTS_4_8001_10154", "1RlXw5gWgBt9Ce2nHgrdPy-1i5dCPKf-7"]
   ]);
 
   async function handleSync() {
