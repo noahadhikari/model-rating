@@ -1,5 +1,5 @@
-import { IsBestOrientation, Model } from "@prisma/client";
-import React, { useState } from "react";
+import { Model } from "@prisma/client";
+import { useState } from "react";
 
 import { ModelDimensions, StlViewer } from "react-stl-viewer";
 import { env } from "../../env/client.mjs";

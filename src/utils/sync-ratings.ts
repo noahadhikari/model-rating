@@ -1,7 +1,6 @@
 // src/utils/sync-ratings.ts
 
 import { Prisma, PrismaClient } from "@prisma/client";
-import { IsBestOrientation } from "@prisma/client";
 // const { parse } = require("csv-parse");
 // const fs = require("fs");
 
@@ -23,10 +22,10 @@ export const syncRatings = async (csvPath: string) => {
     // });
 }
 
-interface Rating {
-    modelId: string;
-    author: string;
-    bestPossible: IsBestOrientation;
-    quality: number;
-    reasoning: string;
-}
+// interface Rating {
+//     modelId: string;
+//     author: string;
+//     bestPossible: IsBestOrientation;
+//     quality: number;
+//     reasoning: string;
+// }
