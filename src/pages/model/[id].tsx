@@ -3,7 +3,8 @@ import { NextPage } from "next";
 import { trpc } from "../../utils/trpc";
 import { useState } from "react";
 import ModelLayout from "../components/ModelLayout";
-import HeaderBar from "../components/HeaderBar";
+import Layout from "../components/Layout/Layout";
+import { Text } from "@chakra-ui/react";
 
 const ModelPage: NextPage = () => {
   const [success, setSuccess] = useState(true);
@@ -22,12 +23,21 @@ const ModelPage: NextPage = () => {
     }
   );
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <Text>Loading...</Text>;
   }
   if (!success) {
-    return <h1>Model with id {id} doesn't exist.</h1>;
+    return <Text>Model with id {id} doesn't exist.</Text>;
   }
-  return <ModelLayout model={model!} />;
+
+  if (!model) {
+	return <Text>Model not found</Text>;
+  }
+
+  return (
+    <Layout>
+      <ModelLayout model={model} />
+    </Layout>
+  );
 };
 
 export default ModelPage;

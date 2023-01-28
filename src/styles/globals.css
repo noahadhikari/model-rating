@@ -9,6 +9,13 @@ div#__next {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
+.hover-cursor {
+  cursor: pointer;
+}
+
+.hover-cursor:hover {
+  filter: brightness(85%);
+}
 a {
   color: blue;
   text-decoration: none;
@@ -39,37 +46,21 @@ a {
 
 .createRating {
   padding-left: 20px;
-  width: 30%;
-  background-color: #fff;
+  width: 100%;
 }
 
 .createRating > form > label {
-    white-space: nowrap;
-}
-
-.ratingHeader {
-    white-space: nowrap;
-    font-weight: 600;
-    margin-top: 20px;
+  white-space: nowrap;
 }
 
 .ratingWrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: baseline;
-    height: 100%;
-    width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: baseline;
+  height: 100%;
+  width: 30%;
 }
 
-.ratingWrapper > button {
-    margin-left: 20px;
-    width: fit-content;
-}
-
-h1 {
-  margin-top: 0px;
-  align-items: center;
-}
 
 .searchTable {
   width: 50%;

@@ -17,7 +17,7 @@ export const modelRouter = router({
         folderId: z.string(),
       })
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       return ctx.prisma.model.create({
         data: {
           name: input.name,
@@ -49,7 +49,7 @@ export const modelRouter = router({
         limit: z.number().optional(),
       })
     )
-    .query(({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       return ctx.prisma.model.findMany({
         where: {
           name: {
@@ -158,12 +158,12 @@ export const modelRouter = router({
   getFewestRatingModel: publicProcedure
     .input(
       z.object({
-        limit: z.number().optional(),
+        limit: z.number()
       })
     )
-    .query(({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       return ctx.prisma.model.findMany({
-        take: input.limit || 1,
+        take: input.limit,
         orderBy: {
           Rating: {
             _count: "desc",

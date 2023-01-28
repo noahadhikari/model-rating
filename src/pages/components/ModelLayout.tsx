@@ -1,15 +1,9 @@
-import { IsBestOrientation, Model } from "@prisma/client";
-import React, { useState } from "react";
-import { trpc } from "../../utils/trpc";
-
-import { ModelDimensions, StlViewer } from "react-stl-viewer";
+import { Model } from "@prisma/client";
 import { env } from "../../env/client.mjs";
 
-import Head from "next/head";
-import CreateModel from "./CreateModel";
 import CreateRating from "./CreateRating";
 import ModelVisualizer from "./ModelVisualizer";
-import HeaderBar from "./HeaderBar";
+import { Button, Flex } from "@chakra-ui/react";
 
 const BASE_URL = "https://www.googleapis.com/drive/v3/files/";
 
@@ -63,35 +57,35 @@ const ModelLayout = (props: ModelLayoutProps) => {
     link.click();
   }
 
-  const modelStyle = {
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    backgroundColor: "#ddd",
-  };
-
   return (
-    <>
-      <HeaderBar />
-
-      <div className="modelWrapper">
-        <div className="stlViewer">
-          <ModelVisualizer
-            model={model}
-            orbitControls={true}
-            shadows={true}
-            showAxes={true}
-          />
-        </div>
-        <div className="ratingWrapper">
-          <CreateRating modelId={model.id} modelName={model.name} />
-          <br />
-          <button onClick={handleStlDownload}>Download STL</button>
-          <button onClick={handleBinvoxDownload}>Download Binvox</button>
-        </div>
+    <div className="modelWrapper">
+      <div className="stlViewer">
+        <ModelVisualizer
+          model={model}
+          orbitControls={true}
+          shadows={true}
+          showAxes={true}
+        />
       </div>
-    </>
+      <Flex
+        flexDir="column"
+        justifyContent="space-between"
+        className="ratingWrapper"
+		pl={4}
+		pr={4}
+      >
+        <CreateRating modelId={model.id} modelName={model.name} />
+
+        <Flex flexDir="column">
+          <Button mb={2} colorScheme="orange" onClick={handleStlDownload}>
+            Download STL
+          </Button>
+          <Button colorScheme="cyan" onClick={handleBinvoxDownload}>
+            Download Binvox
+          </Button>
+        </Flex>
+      </Flex>
+    </div>
   );
 };
 
