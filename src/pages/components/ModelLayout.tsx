@@ -4,6 +4,7 @@ import { env } from "../../env/client.mjs";
 import CreateRating from "./CreateRating";
 import ModelVisualizer from "./ModelVisualizer";
 import { Button, Flex } from "@chakra-ui/react";
+import { trpc } from "../../utils/trpc";
 
 const BASE_URL = "https://www.googleapis.com/drive/v3/files/";
 
@@ -13,6 +14,10 @@ interface ModelLayoutProps {
 
 const ModelLayout = (props: ModelLayoutProps) => {
   const { model } = props;
+  const { data: nextModelData } = trpc.model.getFewestRatingModel.useQuery({ limit: 1 });
+  const nextModel = nextModelData?.at(0);
+  
+
   if (!model) {
     return <></>;
   }
@@ -57,6 +62,15 @@ const ModelLayout = (props: ModelLayoutProps) => {
     link.click();
   }
 
+  // TODO: Fix this
+  const handleNextModel = () => {
+	if (nextModel) {
+	  window.location.href = "/model/" + nextModel.id;
+	} else {
+	  alert("Error finding next model");
+	}
+  }
+
   return (
     <div className="modelWrapper">
       <div className="stlViewer">
@@ -77,6 +91,9 @@ const ModelLayout = (props: ModelLayoutProps) => {
         <CreateRating modelId={model.id} modelName={model.name} />
 
         <Flex flexDir="column">
+		  <Button mb={2} colorScheme="blue" onClick={handleNextModel}>
+			Next Model
+		  </Button>
           <Button mb={2} colorScheme="orange" onClick={handleStlDownload}>
             Download STL
           </Button>

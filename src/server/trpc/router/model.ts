@@ -166,7 +166,7 @@ export const modelRouter = router({
         take: input.limit,
         orderBy: {
           Rating: {
-            _count: "desc",
+            _count: "asc",
           },
         },
       });

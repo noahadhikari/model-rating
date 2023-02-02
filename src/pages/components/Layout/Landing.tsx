@@ -4,9 +4,17 @@ import { useSession } from "next-auth/react";
 const Landing = () => {
   const session = useSession();
 
-  if (!session) {
-    return <h1>Please sign in</h1>;
-  }
+  const getLandingText = () => {
+    if (!session || session.status === "unauthenticated") {
+      return "Welcome. Please sign in";
+    } else if (session.status === "loading") {
+      return "Loading...";
+    } else {
+      return "Welcome " + session.data?.user?.name;
+    }
+  };
+
+  const landingText = getLandingText();
 
   return (
     <Box>
@@ -16,7 +24,7 @@ const Landing = () => {
         textAlign="center"
         color="gray.900"
       >
-        Welcome {session.data?.user?.name ?? ". Please sign in"}
+        {landingText}
       </Text>
       ;
     </Box>
