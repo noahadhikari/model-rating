@@ -63,7 +63,6 @@ export const ratingRouter = router({
       const newInput = [];
       let i = 0;
       for (const rating of input) {
-        console.log("iter", i++);
         const model = await ctx.prisma.model.findFirst({
           where: {
             name: rating.modelName,
@@ -72,14 +71,11 @@ export const ratingRouter = router({
         if (!model) {
           continue;
         }
-        console.log("2");
         newInput.push({
           ...rating,
           modelId: model.id,
         });
       }
-      console.log("newInput", newInput);
-      console.log("3");
       const data = await ctx.prisma.rating.createMany({
         data: newInput.map((rating) => {
           return {
@@ -91,29 +87,28 @@ export const ratingRouter = router({
         }),
         skipDuplicates: true,
       });
-      console.log(data);
     }),
 
   getAllRatings: publicProcedure.query(async ({ ctx }) => {
     const ratings = await ctx.prisma.rating.findMany();
-	// Add the model name and stlId to the rating
-	const ratingsWithModel = await Promise.all(
-	  ratings.map(async (rating) => {
-		const model = await ctx.prisma.model.findFirst({
-		  where: {
-			id: rating.modelId,
-		  },
-		});
-		if (!model) {
-		  throw new Error("Model not found");
-		}
-		return {
-		  ...rating,
-		  modelName: model.name,
-		  stlId: model.stlId,
-		};
-	  })
-	);
+    // Add the model name and stlId to the rating
+    const ratingsWithModel = await Promise.all(
+      ratings.map(async (rating) => {
+        const model = await ctx.prisma.model.findFirst({
+          where: {
+            id: rating.modelId,
+          },
+        });
+        if (!model) {
+          throw new Error("Model not found");
+        }
+        return {
+          ...rating,
+          modelName: model.name,
+          stlId: model.stlId,
+        };
+      })
+    );
     return ratingsWithModel;
   }),
 });

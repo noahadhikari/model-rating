@@ -73,28 +73,26 @@ const Home: NextPage = () => {
   //   }
 
   const importRatingsMutation = trpc.rating.importRatings.useMutation();
-  const {data} = trpc.rating.getAllRatings.useQuery();
-  console.log('data', data)
 
-  const csvData = `2a5d8b29-580b-46da-8e59-4a4f1d2856e3,-2,
-  2a88ca51-9b3c-408c-9731-9ca3b021cd1b,-2,
-  2a88ca51-9b3c-408c-9731-9ca3b021cd1b.stl00-1,-2,
-  2a88ca51-9b3c-408c-9731-9ca3b021cd1b.stl100,-2,
-  2a88ca51-9b3c-408c-9731-9ca3b021cd1b.stl-100,-2,
-  2a254b41-eeb2-43b3-b1ba-b6b65ea5d301,-2,
-  2a254b41-eeb2-43b3-b1ba-b6b65ea5d301.stl00-1,-2,
-  2a254b41-eeb2-43b3-b1ba-b6b65ea5d301.stl0-10,-2,
-  2a254b41-eeb2-43b3-b1ba-b6b65ea5d301.stl010,-2,
-  2a666f7a-1353-4199-988d-5dc549d63bb8.stl0-10,-2,
-  2a666f7a-1353-4199-988d-5dc549d63bb8.stl100,-2,
-  2a666f7a-1353-4199-988d-5dc549d63bb8.stl-100,-2,
-  2a6458cf-ff3c-495d-b9eb-3ca8d6df94ee.stl0-10,-2,
-  2a6458cf-ff3c-495d-b9eb-3ca8d6df94ee.stl010,-2,
-  2a6458cf-ff3c-495d-b9eb-3ca8d6df94ee.stl100,-2,
-  2a6458cf-ff3c-495d-b9eb-3ca8d6df94ee.stl-100,-2,
-  2a603729-d0a6-43b1-b1fc-ed3a171873a0.stl0-10,-2,
-  2a603729-d0a6-43b1-b1fc-ed3a171873a0.stl010,-2,
-  2aefb65f-8a8d-4dd7-929a-9293e9958dab,-2,a`;
+//   const csvData = `2a5d8b29-580b-46da-8e59-4a4f1d2856e3,-2,
+//   2a88ca51-9b3c-408c-9731-9ca3b021cd1b,-2,
+//   2a88ca51-9b3c-408c-9731-9ca3b021cd1b.stl00-1,-2,
+//   2a88ca51-9b3c-408c-9731-9ca3b021cd1b.stl100,-2,
+//   2a88ca51-9b3c-408c-9731-9ca3b021cd1b.stl-100,-2,
+//   2a254b41-eeb2-43b3-b1ba-b6b65ea5d301,-2,
+//   2a254b41-eeb2-43b3-b1ba-b6b65ea5d301.stl00-1,-2,
+//   2a254b41-eeb2-43b3-b1ba-b6b65ea5d301.stl0-10,-2,
+//   2a254b41-eeb2-43b3-b1ba-b6b65ea5d301.stl010,-2,
+//   2a666f7a-1353-4199-988d-5dc549d63bb8.stl0-10,-2,
+//   2a666f7a-1353-4199-988d-5dc549d63bb8.stl100,-2,
+//   2a666f7a-1353-4199-988d-5dc549d63bb8.stl-100,-2,
+//   2a6458cf-ff3c-495d-b9eb-3ca8d6df94ee.stl0-10,-2,
+//   2a6458cf-ff3c-495d-b9eb-3ca8d6df94ee.stl010,-2,
+//   2a6458cf-ff3c-495d-b9eb-3ca8d6df94ee.stl100,-2,
+//   2a6458cf-ff3c-495d-b9eb-3ca8d6df94ee.stl-100,-2,
+//   2a603729-d0a6-43b1-b1fc-ed3a171873a0.stl0-10,-2,
+//   2a603729-d0a6-43b1-b1fc-ed3a171873a0.stl010,-2,
+//   2aefb65f-8a8d-4dd7-929a-9293e9958dab,-2,a`;
   //   2aefb65f-8a8d-4dd7-929a-9293e9958dab.stl00-1,-2,
   //   2aefb65f-8a8d-4dd7-929a-9293e9958dab.stl0-10,-2,
   //   2aefb65f-8a8d-4dd7-929a-9293e9958dab.stl010,-2,
@@ -256,26 +254,26 @@ const Home: NextPage = () => {
   //   2c950e64-9868-40da-aca4-1c6396208df4.stl0-10,2,"AXIS PERP TO PLATE, NO OVERHANG"
   //   2c950e64-9868-40da-aca4-1c6396208df4.stl010,2,"AXIS PERP TO PLATE, NO OVERHANG"`;
 
-  const handlePrintCsvData = async () => {
-    const csv = csvData.split("\n");
-    const csvDataArray = csv.map((row) => {
-      const rowData = row.split(",");
-      return rowData;
-    });
+//   const handlePrintCsvData = async () => {
+//     const csv = csvData.split("\n");
+//     const csvDataArray = csv.map((row) => {
+//       const rowData = row.split(",");
+//       return rowData;
+//     });
 
-    const result = [];
-    for (const row of csvDataArray) {
-      const [modelName, score, reasoning] = row;
-      result.push({
-        modelName: modelName!,
-        score: parseInt(score!),
-        reasoning,
-      });
-    }
+//     const result = [];
+//     for (const row of csvDataArray) {
+//       const [modelName, score, reasoning] = row;
+//       result.push({
+//         modelName: modelName!,
+//         score: parseInt(score!),
+//         reasoning,
+//       });
+//     }
 
-    console.log(result);
-    await importRatingsMutation.mutateAsync(result);
-  };
+//     console.log(result);
+//     await importRatingsMutation.mutateAsync(result);
+//   };
   //   useEffect(() => {
   // 	if (session?.data?.user) {
   // 		console.log("session", session)
@@ -286,9 +284,9 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <Landing />
-      {session?.data?.user && (
+      {/* {session?.data?.user && (
         <button onClick={handlePrintCsvData}>Sync</button>
-      )}
+      )} */}
     </Layout>
   );
   //   return (
