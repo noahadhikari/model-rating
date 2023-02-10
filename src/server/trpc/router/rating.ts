@@ -1,4 +1,4 @@
-import { router, protectedProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
 
 export const ratingRouter = router({
@@ -28,4 +28,92 @@ export const ratingRouter = router({
         },
       });
     }),
+
+  // Take an array of ratings and create them all at once
+  importRatings: protectedProcedure
+    .input(
+      z.array(
+        z.object({
+          modelName: z.string(),
+          score: z.number().min(-2).max(2),
+          reasoning: z.string().optional(),
+        })
+      )
+    )
+
+    .mutation(async ({ ctx, input }) => {
+      // Get the model ids from the model names and add them to the input
+      //   const newInput = await Promise.all(
+      //     input.map(async (rating) => {
+      //       const model = await ctx.prisma.model.findFirst({
+      //         where: {
+      //           name: rating.modelName,
+      //         },
+      //       });
+      //       if (!model) {
+      //         throw new Error("Model not found: " + rating.modelName);
+      //       }
+      //       return {
+      //         ...rating,
+      //         modelId: model.id,
+      //       };
+      //     })
+      //   );
+
+      const newInput = [];
+      let i = 0;
+      for (const rating of input) {
+        console.log("iter", i++);
+        const model = await ctx.prisma.model.findFirst({
+          where: {
+            name: rating.modelName,
+          },
+        });
+        if (!model) {
+          continue;
+        }
+        console.log("2");
+        newInput.push({
+          ...rating,
+          modelId: model.id,
+        });
+      }
+      console.log("newInput", newInput);
+      console.log("3");
+      const data = await ctx.prisma.rating.createMany({
+        data: newInput.map((rating) => {
+          return {
+            modelId: rating.modelId,
+            userId: ctx.session.user.id,
+            score: rating.score,
+            reasoning: rating.reasoning,
+          };
+        }),
+        skipDuplicates: true,
+      });
+      console.log(data);
+    }),
+
+  getAllRatings: publicProcedure.query(async ({ ctx }) => {
+    const ratings = await ctx.prisma.rating.findMany();
+	// Add the model name and stlId to the rating
+	const ratingsWithModel = await Promise.all(
+	  ratings.map(async (rating) => {
+		const model = await ctx.prisma.model.findFirst({
+		  where: {
+			id: rating.modelId,
+		  },
+		});
+		if (!model) {
+		  throw new Error("Model not found");
+		}
+		return {
+		  ...rating,
+		  modelName: model.name,
+		  stlId: model.stlId,
+		};
+	  })
+	);
+    return ratingsWithModel;
+  }),
 });
