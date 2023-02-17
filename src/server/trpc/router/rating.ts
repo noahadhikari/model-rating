@@ -145,6 +145,7 @@ export const ratingRouter = router({
           modelName: model.name,
           stlId: model.stlId,
           binVoxId: model.binvoxId,
+		  folderId: model.folderId,
         };
       })
     );
