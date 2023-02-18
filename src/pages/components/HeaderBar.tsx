@@ -6,12 +6,9 @@ import Router from "next/router";
 
 const HeaderBar = () => {
   const { data: session } = useSession();
-  const nextFewestRated = trpc.model.getFewestRatingModel.useQuery(
-    {
-      limit: 1,
-    },
-    { refetchOnWindowFocus: false }
-  );
+  const nextFewestRated = trpc.model.getFewestRatingModel.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+  });
 
   const handleSignIn = () => {
     if (session) {
@@ -22,7 +19,7 @@ const HeaderBar = () => {
   };
 
   const handleNextFewestRated = () => {
-    const id = nextFewestRated?.data?.at(0)?.id;
+    const id = nextFewestRated.data?.id;
     if (!id) return;
     Router.push(`/model/${id}`);
   };

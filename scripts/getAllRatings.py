@@ -13,7 +13,8 @@ class Rating:
 	binVoxId: int
 
 
-URL = "https://model-rating.vercel.app/api/trpc/rating.getAllRatings?batch=1&input={%220%22%3A{%22json%22%3Anull%2C%22meta%22%3A{%22values%22%3A[%22undefined%22]}}}"
+# URL = "https://model-rating.vercel.app/api/trpc/rating.getAllRatings?batch=1&input={%220%22%3A{%22json%22%3Anull%2C%22meta%22%3A{%22values%22%3A[%22undefined%22]}}}"
+URL = "https://model-rating.vercel.app/api/trpc/rating.getAllRatings?batch=1&input=%7B%220%22%3A%7B%22json%22%3Anull%2C%22meta%22%3A%7B%22values%22%3A%5B%22undefined%22%5D%7D%7D%7D"
 
 def getRatings() -> List[Rating]:
 	response = requests.get(URL)

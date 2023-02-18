@@ -1,7 +1,6 @@
 import { router, publicProcedure } from "../trpc";
-import { env } from "../../../env/client.mjs";
 import { z } from "zod";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import {
   getAllDriveFilesIn,
   GoogleDriveFile,
@@ -155,22 +154,15 @@ export const modelRouter = router({
       return totalCount;
     }),
 
-  getFewestRatingModel: publicProcedure
-    .input(
-      z.object({
-        limit: z.number()
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      return ctx.prisma.model.findMany({
-        take: input.limit,
-        orderBy: {
-          Rating: {
-            _count: "asc",
-          },
+  getFewestRatingModel: publicProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.model.findFirst({
+      orderBy: {
+        Rating: {
+          _count: "asc",
         },
-      });
-    }),
+      },
+    });
+  }),
 });
 
 interface PrismaModelFile {

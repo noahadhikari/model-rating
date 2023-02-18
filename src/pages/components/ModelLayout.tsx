@@ -5,6 +5,8 @@ import CreateRating from "./CreateRating";
 import ModelVisualizer from "./ModelVisualizer";
 import { Button, Flex } from "@chakra-ui/react";
 import { trpc } from "../../utils/trpc";
+import Router from "next/router";
+import { useState } from "react";
 
 const BASE_URL = "https://www.googleapis.com/drive/v3/files/";
 
@@ -14,9 +16,14 @@ interface ModelLayoutProps {
 
 const ModelLayout = (props: ModelLayoutProps) => {
   const { model } = props;
-  const { data: nextModelData } = trpc.model.getFewestRatingModel.useQuery({ limit: 1 });
-  const nextModel = nextModelData?.at(0);
-  
+  const { refetch: fetchNextModel } = trpc.model.getFewestRatingModel.useQuery(
+    undefined,
+    {
+      enabled: false,
+      refetchOnWindowFocus: false,
+    }
+  );
+  const [isNextModelLoading, setIsNextModelLoading] = useState(false);
 
   if (!model) {
     return <></>;
@@ -62,14 +69,17 @@ const ModelLayout = (props: ModelLayoutProps) => {
     link.click();
   }
 
-  // TODO: Fix this
-  const handleNextModel = () => {
-	if (nextModel) {
-	  window.location.href = "/model/" + nextModel.id;
-	} else {
-	  alert("Error finding next model");
-	}
-  }
+  const handleNextFewestRated = async () => {
+    setIsNextModelLoading(true);
+    const nextFewestRated = await fetchNextModel();
+    setIsNextModelLoading(false);
+    const id = nextFewestRated.data?.id;
+    if (!id) {
+      alert("Could not find next model");
+      return;
+    }
+    Router.push(`/model/${id}`);
+  };
 
   return (
     <div className="modelWrapper">
@@ -85,15 +95,20 @@ const ModelLayout = (props: ModelLayoutProps) => {
         flexDir="column"
         justifyContent="space-between"
         className="ratingWrapper"
-		pl={4}
-		pr={4}
+        pl={4}
+        pr={4}
       >
         <CreateRating modelId={model.id} modelName={model.name} />
 
         <Flex flexDir="column">
-		  <Button mb={2} colorScheme="blue" onClick={handleNextModel}>
-			Next Model
-		  </Button>
+          <Button
+            mb={2}
+            colorScheme="blue"
+            onClick={handleNextFewestRated}
+            isLoading={isNextModelLoading}
+          >
+            Next Model
+          </Button>
           <Button mb={2} colorScheme="orange" onClick={handleStlDownload}>
             Download STL
           </Button>
