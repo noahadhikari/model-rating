@@ -40,7 +40,9 @@ export const ratingRouter = router({
     .mutation(async ({ ctx, input }) => {
       const model = await ctx.prisma.model.findFirst({
         where: {
-          name: input.modelName,
+          name: {
+            contains: input.modelName,
+          },
         },
       });
       if (!model) {
@@ -151,4 +153,77 @@ export const ratingRouter = router({
     );
     return ratingsWithModel;
   }),
+
+  importAutoRatings: publicProcedure
+    .input(
+      z.array(
+        z.object({
+          modelName: z.string(),
+          score: z.string(),
+        })
+      )
+    )
+    .mutation(async ({ ctx, input }) => {
+      const modelsNotFound: string[] = [];
+
+      // createMany needs primary key, so we need to get the model id from the model name
+      console.log("Creating new input");
+      const newInput = await Promise.all(
+        input.map(async (rating) => {
+          // Remove everything after the last dot
+          const modelName = rating.modelName.split(".").slice(0, -1).join(".");
+          const model = await ctx.prisma.model.findFirst({
+            where: { name: modelName },
+          });
+          if (!model) {
+            modelsNotFound.push(rating.modelName);
+            return undefined;
+          }
+          return {
+            ...rating,
+            modelId: model.id,
+          };
+        })
+      );
+
+      // Remove the undefined values
+      console.log("Filtering new input of undefined values");
+      let filteredInput = newInput.filter((rating) => rating !== undefined) as {
+        modelName: string;
+        score: string;
+        modelId: number;
+      }[];
+
+      // Filter out the ratings that are already in the database and tweakerScore is not null
+      console.log("Filtering duplicate ratings");
+      const existingRatings = await ctx.prisma.rating.findMany({
+        where: {
+          modelId: {
+            in: filteredInput.map((rating) => rating.modelId),
+          },
+          tweakerScore: {
+            not: null,
+          },
+        },
+      });
+
+      const existingModelIds = existingRatings.map((rating) => rating.modelId);
+      filteredInput = filteredInput.filter(
+        (rating) => !existingModelIds.includes(rating.modelId)
+      );
+
+      console.log("Starting to create ratings");
+      await ctx.prisma.rating.createMany({
+        data: filteredInput.map((rating) => {
+          return {
+            modelId: rating.modelId,
+            userId: ctx.session?.user?.id ?? "",
+            tweakerScore: parseFloat(rating.score),
+            reasoning: "Tweaker",
+          };
+        }),
+      });
+      console.log("Finished creating " + filteredInput.length + " ratings");
+      console.log("Models not found: " + modelsNotFound);
+    }),
 });
