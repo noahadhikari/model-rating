@@ -1,93 +1,102 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["fullTextSearch", "fullTextIndex"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
-datasource db {
-    provider     = "mysql"
-    url          = env("DATABASE_URL")
-    relationMode = "prisma"
-}
-
-// Necessary for Next auth
-model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? @db.Text
-    access_token      String? @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? @db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@unique([provider, providerAccountId])
-    @@index([userId])
-}
-
-model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@index([userId])
-}
-
-model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    Rating        Rating[]
-}
-
-model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
-
-    @@unique([identifier, token])
+generator erd {
+  provider = "prisma-erd-generator"
 }
 
 generator js {
-    provider        = "prisma-client-js"
-    previewFeatures = ["referentialIntegrity"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  Rating        Rating[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model Model {
-    id       Int      @id @default(autoincrement())
-    name     String
-    stlId    String   @unique // Google Drive file id of the stl file
-    binvoxId String? // Google Drive file id of the binvox file
-    folderId String // Google Drive folder id of the model
-    Rating   Rating[]
+  id       Int      @id @default(autoincrement())
+  name     String
+  stlId    String   @unique
+  binvoxId String?
+  folderId String
+  Rating   Rating[]
 }
 
-// Each model should have a rating
 model Rating {
-    id Int @id @default(autoincrement())
+  id           Int     @id @default(autoincrement())
+  modelId      Int
+  reasoning    String?
+  userId       String
+  score        Int     @default(-100)
+  tweakerScore Float?
+  model        Model   @relation(fields: [modelId], references: [id])
+  creator      User    @relation(fields: [userId], references: [id])
 
-    // -100 is a placeholder value, but ratings are from -2 to 2
-    score     Int     @default(-100)
-    model     Model   @relation(fields: [modelId], references: [id])
-    creator   User    @relation(fields: [userId], references: [id])
-    reasoning String?
+  @@index([modelId])
+  @@index([userId])
+}
 
-    modelId Int
-    userId  String
+model de888608_5bbd_56c2_8434_dfd888a9e3e2_20230316191710_vrepl {
+  id        Int     @id @default(autoincrement())
+  modelId   Int
+  reasoning String?
+  userId    String
+  score     Int     @default(-100)
 
-    @@index([modelId])
-    @@index([userId])
+  @@index([modelId], map: "Rating_modelId_idx")
+  @@index([userId], map: "Rating_userId_idx")
+  @@map("_de888608_5bbd_56c2_8434_dfd888a9e3e2_20230316191710_vrepl")
 }
