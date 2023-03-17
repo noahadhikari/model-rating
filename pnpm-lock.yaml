@@ -33,7 +33,6 @@ specifiers:
   prettier: ^2.7.1
   prism: ^4.1.2
   prisma: ^4.6.1
-  prisma-erd-generator: ^1.2.5
   react: 18.2.0
   react-csv-importer: ^0.8.0
   react-dom: 18.2.0
@@ -85,7 +84,6 @@ devDependencies:
   eslint-plugin-react-hooks: 4.6.0_eslint@8.28.0
   prism: 4.1.2_react@18.2.0
   prisma: 4.6.1
-  prisma-erd-generator: 1.2.5_xo7vhf5tpjyfumjes2sd52u2xy
   typescript: 4.9.3
 
 packages:
@@ -1679,34 +1677,15 @@ packages:
     dependencies:
       '@prisma/engines-version': 4.6.1-3.694eea289a8462c80264df36757e4fdc129b1b32
       prisma: 4.6.1
-
-  /@prisma/debug/4.11.0:
-    resolution: {integrity: sha512-2ZCmY5l5IfMCnlsBYECysK3Gaoq4BWl7KbOLGDYRwrlZTA/DwUqJ3JrmroJQY6jHvSkyvMrkaJpQKo1QfKuuyw==}
-    dependencies:
-      '@types/debug': 4.1.7
-      debug: 4.3.4
-      strip-ansi: 6.0.1
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
+    dev: false
 
   /@prisma/engines-version/4.6.1-3.694eea289a8462c80264df36757e4fdc129b1b32:
     resolution: {integrity: sha512-HUCmkXAU2jqp2O1RvNtbE+seLGLyJGEABZS/R38rZjSAafAy0WzBuHq+tbZMnD+b5OSCsTVtIPVcuvx1ySxcWQ==}
+    dev: false
 
   /@prisma/engines/4.6.1:
     resolution: {integrity: sha512-3u2/XxvxB+Q7cMXHnKU0CpBiUK1QWqpgiBv28YDo1zOIJE3FCF8DI2vrp6vuwjGt5h0JGXDSvmSf4D4maVjJdw==}
     requiresBuild: true
-
-  /@prisma/generator-helper/4.11.0:
-    resolution: {integrity: sha512-hHP2sqMT7xPbFOVQQ1HrGFbCG1mV1DHiiUC7wceJfpWMMuBIBZhQVsayNspHk3V5Y+HeOOUruE+qPNHXk2Botg==}
-    dependencies:
-      '@prisma/debug': 4.11.0
-      '@types/cross-spawn': 6.0.2
-      chalk: 4.1.2
-      cross-spawn: 7.0.3
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
 
   /@react-three/fiber/8.9.1_ee34sidbpuk5ebd4phepfgxxdi:
     resolution: {integrity: sha512-xRMO9RGp0DkxSFu5BmmkjCxJ4r0dEpLobtxXdZwI0h2rZZaCnkPM5zThRN8xaZNbZhzRSVICeNOFaZltr9xFyQ==}
@@ -1824,18 +1803,6 @@ packages:
     resolution: {integrity: sha512-q3Cl4RC5q0kRg8KGt0sWQ11hKrLaIxK2FYGy7fQ6E+k9Yo8r2VDxn++PskZk9LTzgKRi1JtfZVJO15oXoXJHyw==}
     dev: false
 
-  /@types/cross-spawn/6.0.2:
-    resolution: {integrity: sha512-KuwNhp3eza+Rhu8IFI5HUXRP0LIhqH5cAjubUvGXXthh4YYBuP2ntwEX+Cz8GJoZUHlKo247wPWOfA9LYEq4cw==}
-    dependencies:
-      '@types/node': 18.0.0
-    dev: true
-
-  /@types/debug/4.1.7:
-    resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
-    dependencies:
-      '@types/ms': 0.7.31
-    dev: true
-
   /@types/json-schema/7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
     dev: true
@@ -1853,10 +1820,6 @@ packages:
   /@types/lodash/4.14.191:
     resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
     dev: false
-
-  /@types/ms/0.7.31:
-    resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
-    dev: true
 
   /@types/node/18.0.0:
     resolution: {integrity: sha512-cHlGmko4gWLVI27cGJntjs/Sj8th9aYwplmZFwmmgYQQvL5NUsgVJG7OddLvNfLqYS31KFN0s3qlaD9qCaxACA==}
@@ -2544,6 +2507,7 @@ packages:
   /dotenv/16.0.3:
     resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
     engines: {node: '>=12'}
+    dev: false
 
   /draco3d/1.5.5:
     resolution: {integrity: sha512-JVuNV0EJzD3LBYhGyIXJLeBID/EVtmFO1ZNhAYflTgiMiAJlbhXQmRRda/azjc8MRVMHh0gqGhiqHUo5dIXM8Q==}
@@ -4051,22 +4015,6 @@ packages:
       prism-redux: 1.0.2
     transitivePeerDependencies:
       - react
-    dev: true
-
-  /prisma-erd-generator/1.2.5_xo7vhf5tpjyfumjes2sd52u2xy:
-    resolution: {integrity: sha512-4Bjrsw4Db915qG1+oMZ4tUdXRcPAyExdraj/5qiWU6QD7m/6QLWJPVADDvqkAQVS3Y4vjWMZovD2eakKZWmZcw==}
-    engines: {node: '>=14'}
-    hasBin: true
-    peerDependencies:
-      '@mermaid-js/mermaid-cli': ^8.14.0
-      '@prisma/client': ^4.0.0
-    dependencies:
-      '@mermaid-js/mermaid-cli': 10.0.0_typescript@4.9.3
-      '@prisma/client': 4.6.1_prisma@4.6.1
-      '@prisma/generator-helper': 4.11.0
-      dotenv: 16.0.3
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /prisma/4.6.1:
