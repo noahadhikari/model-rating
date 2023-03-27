@@ -129,6 +129,46 @@ export const ratingRouter = router({
       //   });
     }),
 
+  //   getAllRatingsWithPage: publicProcedure.input(
+  // 	z.object({
+  // 	  modelName: z.string(),
+  // 	  score: z.number().min(-2).max(2),
+  // 	  reasoning: z.string().optional(),
+  // 	})
+  //   ),
+
+  getRatingsWithPage: publicProcedure
+    .input(z.object({ page: z.number() }))
+    .query(async ({ ctx, input }) => {
+	  // Page size is 50
+      const ratings = await ctx.prisma.rating.findMany({
+        skip: (input.page - 1) * 50,
+        take: 50,
+        orderBy: { id: "asc" },
+      });
+      // Add the model name and stlId and binVoxId to the rating
+      const ratingsWithModel = await Promise.all(
+        ratings.map(async (rating) => {
+          const model = await ctx.prisma.model.findFirst({
+            where: {
+              id: rating.modelId,
+            },
+          });
+          if (!model) {
+            throw new Error("Model not found");
+          }
+          return {
+            ...rating,
+            modelName: model.name,
+            stlId: model.stlId,
+            binVoxId: model.binvoxId,
+            folderId: model.folderId,
+          };
+        })
+      );
+      return ratingsWithModel;
+    }),
+
   getAllRatings: publicProcedure.query(async ({ ctx }) => {
     const ratings = await ctx.prisma.rating.findMany();
     // Add the model name and stlId and binVoxId to the rating
@@ -226,4 +266,17 @@ export const ratingRouter = router({
       console.log("Finished creating " + filteredInput.length + " ratings");
       console.log("Models not found: " + modelsNotFound);
     }),
+
+  removeDuplicateAutoRatings: publicProcedure.mutation(async ({ ctx }) => {
+    const allAutoRatings = await ctx.prisma.rating.findMany({
+      where: {
+        tweakerScore: {
+          not: null,
+        },
+      },
+    });
+
+    const modelIds = allAutoRatings.map((rating) => rating.modelId);
+    // console.log(modelIds.sort())
+  }),
 });

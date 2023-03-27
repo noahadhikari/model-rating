@@ -116,6 +116,14 @@ const Home: NextPage = () => {
   // 	}
   //   }, [session]);
 
+  const removeDupes = trpc.rating.removeDuplicateAutoRatings.useMutation();
+  const handleRemoveDupes = async () => {
+	await removeDupes.mutateAsync();
+  }
+
+  const getAllWithPage = trpc.rating.getRatingsWithPage.useQuery({
+	page: 2,
+  });
   return (
     <Layout>
       <Landing />
@@ -123,6 +131,7 @@ const Home: NextPage = () => {
         <ImportRatings />
         // <button onClick={handlePrintCsvData}>Sync</button>
       )}
+		<button onClick={handleRemoveDupes}>Remove dupes</button>
     </Layout>
   );
   //   return (
