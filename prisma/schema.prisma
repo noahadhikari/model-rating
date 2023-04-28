@@ -69,6 +69,10 @@ model Model {
     binvoxId String?
     folderId String
     Rating   Rating[]
+
+
+	@@index([stlId])
+	@@index([binvoxId])
 }
 
 model Rating {

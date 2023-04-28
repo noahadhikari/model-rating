@@ -16,11 +16,10 @@ export const getAllDriveFilesIn = async (folderId: string) => {
     if (nextPageToken) {
       query += `&pageToken=${nextPageToken}`;
     }
-    // console.log(query);
     nextPageToken = await fetch(query).then((res) => {
       return res.json().then((data) => {
+		// console.log(data)
         files = files.concat(data.files);
-        // console.log(data);
         return data.nextPageToken;
       });
     });

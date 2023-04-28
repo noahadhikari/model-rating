@@ -98,6 +98,7 @@ export const modelRouter = router({
       // console.log("stl length: " + stlFiles.length);
       const binvoxFiles = await getAllDriveFilesIn(binvoxFolderId);
       // console.log("binvox: " + binvoxFiles.length);
+	  console.log({preFilterStlLength: stlFiles.length, preFilterBinvoxLength: binvoxFiles.length})
       stlFiles
         .filter((file: GoogleDriveFile) => {
           return file.mimeType === "application/vnd.ms-pki.stl";
@@ -121,6 +122,8 @@ export const modelRouter = router({
           }
         });
 
+	  console.log({postFilterStlFilesLength: stlFiles.length, postFilterBinvoxFilesLength: binvoxFiles.length, postFilterNameToIdsSize: nameToIds.size})
+
       const data = Array.from(nameToIds.values());
       // console.log(data.length);
       data.sort((a, b) => a.name.localeCompare(b.name));
@@ -128,6 +131,8 @@ export const modelRouter = router({
       // partition the data into batches to prevent prisma errors
       const BATCH_SIZE = 5000;
 
+	  console.log("Meshan nameToIds", nameToIds)
+	  console.log("meshan data", data)
       let totalCount = 0;
       for (let i = 0; i < data.length; i += BATCH_SIZE) {
         const batch: Array<PrismaModelFile> = data.slice(i, i + BATCH_SIZE);
