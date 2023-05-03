@@ -4,7 +4,7 @@ import { trpc } from "../../utils/trpc";
 import { useState } from "react";
 import ModelLayout from "../components/ModelLayout";
 import Layout from "../components/Layout/Layout";
-import { Text } from "@chakra-ui/react";
+import { Spinner, Text } from "@chakra-ui/react";
 
 const ModelPage: NextPage = () => {
   const [success, setSuccess] = useState(true);
@@ -23,7 +23,7 @@ const ModelPage: NextPage = () => {
     }
   );
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return <Spinner />;
   }
   if (!success) {
     return <Text>Model with id {id} doesn't exist.</Text>;

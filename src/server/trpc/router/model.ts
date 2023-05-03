@@ -1,4 +1,4 @@
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { Prisma } from "@prisma/client";
 import {
@@ -98,7 +98,10 @@ export const modelRouter = router({
       // console.log("stl length: " + stlFiles.length);
       const binvoxFiles = await getAllDriveFilesIn(binvoxFolderId);
       // console.log("binvox: " + binvoxFiles.length);
-	  console.log({preFilterStlLength: stlFiles.length, preFilterBinvoxLength: binvoxFiles.length})
+      console.log({
+        preFilterStlLength: stlFiles.length,
+        preFilterBinvoxLength: binvoxFiles.length,
+      });
       stlFiles
         .filter((file: GoogleDriveFile) => {
           return file.mimeType === "application/vnd.ms-pki.stl";
@@ -122,7 +125,11 @@ export const modelRouter = router({
           }
         });
 
-	  console.log({postFilterStlFilesLength: stlFiles.length, postFilterBinvoxFilesLength: binvoxFiles.length, postFilterNameToIdsSize: nameToIds.size})
+      console.log({
+        postFilterStlFilesLength: stlFiles.length,
+        postFilterBinvoxFilesLength: binvoxFiles.length,
+        postFilterNameToIdsSize: nameToIds.size,
+      });
 
       const data = Array.from(nameToIds.values());
       // console.log(data.length);
@@ -131,8 +138,8 @@ export const modelRouter = router({
       // partition the data into batches to prevent prisma errors
       const BATCH_SIZE = 5000;
 
-	  console.log("Meshan nameToIds", nameToIds)
-	  console.log("meshan data", data)
+      console.log("Meshan nameToIds", nameToIds);
+      console.log("meshan data", data);
       let totalCount = 0;
       for (let i = 0; i < data.length; i += BATCH_SIZE) {
         const batch: Array<PrismaModelFile> = data.slice(i, i + BATCH_SIZE);
@@ -159,15 +166,29 @@ export const modelRouter = router({
       return totalCount;
     }),
 
-  getFewestRatingModel: publicProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.model.findFirst({
-      orderBy: {
-        Rating: {
-          _count: "asc",
+  getFewestRatedModel: protectedProcedure
+    .input(
+      z.object({
+        excluding: z.number().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const model = await ctx.prisma.model.findFirst({
+        where: {
+          id: {
+            not: input.excluding,
+          },
         },
-      },
-    });
-  }),
+        orderBy: {
+          // get the model with the fewest count of ratings (asc)
+          Rating: {
+            _count: "asc",
+          },
+        },
+        take: 1,
+      });
+      return model;
+    }),
 });
 
 interface PrismaModelFile {

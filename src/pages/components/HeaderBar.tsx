@@ -1,20 +1,40 @@
 import { signIn, signOut, useSession } from "next-auth/react";
-import { Box, Flex, Stack, Text, Divider } from "@chakra-ui/react";
+import { Box, Flex, Stack, Text, Divider, Spinner } from "@chakra-ui/react";
 import Link from "next/link";
 import { trpc } from "../../utils/trpc";
 import Router from "next/router";
 
 const HeaderBar = () => {
-  const { data: session } = useSession();
-  const nextFewestRated = trpc.model.getFewestRatingModel.useQuery(undefined, {
+  const session = useSession();
+  const nextFewestRated = trpc.model.getFewestRatedModel.useQuery({}, {
     refetchOnWindowFocus: false,
   });
 
-  const handleSignIn = () => {
-    if (session) {
-      signOut();
+  const getSignInComponent = () => {
+    if (session?.status === "authenticated") {
+      return (
+        <Text
+          color="gray.200"
+          fontWeight="semibold"
+          className="hover-cursor"
+          onClick={() => signOut()}
+        >
+          Sign Out
+        </Text>
+      );
+    } else if (session?.status === "loading") {
+      return;
     } else {
-      signIn("google");
+      return (
+        <Text
+          color="gray.200"
+          fontWeight="semibold"
+          className="hover-cursor"
+          onClick={() => signIn("google")}
+        >
+          Sign in
+        </Text>
+      );
     }
   };
 
@@ -23,8 +43,6 @@ const HeaderBar = () => {
     if (!id) return;
     Router.push(`/model/${id}`);
   };
-
-  console.log(nextFewestRated.data);
 
   return (
     <Box bg="gray.800" boxShadow="0 0 2px #4a4a4a" fontSize="md">
@@ -52,6 +70,7 @@ const HeaderBar = () => {
 
         <Flex alignItems="center" display={["none", "none", "flex", "flex"]}>
           <Stack direction="row" spacing={5} alignItems="center">
+            <Spinner hidden={session && !!nextFewestRated.data} />
             <Text
               color="gray.200"
               onClick={handleNextFewestRated}
@@ -60,14 +79,7 @@ const HeaderBar = () => {
             >
               Rate Models
             </Text>
-            <Text
-              color="gray.200"
-              fontWeight="semibold"
-              className="hover-cursor"
-              onClick={handleSignIn}
-            >
-              Sign {session ? "Out" : "In"}
-            </Text>
+            {getSignInComponent()}
           </Stack>
         </Flex>
       </Flex>

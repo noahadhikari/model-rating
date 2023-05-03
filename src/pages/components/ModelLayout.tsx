@@ -3,10 +3,9 @@ import { env } from "../../env/client.mjs";
 
 import CreateRating from "./CreateRating";
 import ModelVisualizer from "./ModelVisualizer";
-import { Button, Flex } from "@chakra-ui/react";
+import { Button, Flex, Spinner, Text } from "@chakra-ui/react";
 import { trpc } from "../../utils/trpc";
 import Router from "next/router";
-import { useState } from "react";
 
 const BASE_URL = "https://www.googleapis.com/drive/v3/files/";
 
@@ -16,18 +15,23 @@ interface ModelLayoutProps {
 
 const ModelLayout = (props: ModelLayoutProps) => {
   const { model } = props;
-  const { refetch: fetchNextModel } = trpc.model.getFewestRatingModel.useQuery(
-    undefined,
-    {
-      enabled: false,
-      refetchOnWindowFocus: false,
-    }
-  );
-  const [isNextModelLoading, setIsNextModelLoading] = useState(false);
+  const { data: nextModel, isLoading: isNextModelLoading } =
+    trpc.model.getFewestRatedModel.useQuery(
+      { excluding: model?.id },
+      {
+        refetchOnWindowFocus: false,
+		enabled: model?.id !== undefined && !isNaN(model?.id),
+      }
+    );
 
-  if (!model) {
-    return <></>;
-  }
+  const { data: existingRating, isLoading: isExistingLoading } =
+    trpc.rating.getModelRatingByUser.useQuery(
+      { modelId: model?.id },
+      {
+        refetchOnWindowFocus: false,
+		enabled: model?.id !== undefined && !isNaN(model?.id),
+      }
+    );
 
   async function handleStlDownload() {
     if (model.stlId === null) {
@@ -70,15 +74,11 @@ const ModelLayout = (props: ModelLayoutProps) => {
   }
 
   const handleNextFewestRated = async () => {
-    setIsNextModelLoading(true);
-    const nextFewestRated = await fetchNextModel();
-    setIsNextModelLoading(false);
-    const id = nextFewestRated.data?.id;
-    if (!id) {
+    if (!nextModel?.id) {
       alert("Could not find next model");
       return;
     }
-    Router.push(`/model/${id}`);
+    Router.push(`/model/${nextModel.id}`);
   };
 
   return (
@@ -98,8 +98,21 @@ const ModelLayout = (props: ModelLayoutProps) => {
         pl={4}
         pr={4}
       >
-        <CreateRating modelId={model.id} modelName={model.name} />
-
+        {!!existingRating ? (
+          <Flex flexDirection="column">
+            <Text>You have already rated this model</Text>
+            <Text>Score: {existingRating.score}</Text>
+            <Text>Reasoning: {existingRating.reasoning}</Text>
+          </Flex>
+        ) : (
+          <>
+            {isExistingLoading ? (
+              <Spinner />
+            ) : (
+              <CreateRating modelId={model.id} modelName={model.name} />
+            )}
+          </>
+        )}
         <Flex flexDir="column">
           <Button
             mb={2}

@@ -1,33 +1,30 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 
 const Landing = () => {
   const session = useSession();
 
   const getLandingText = () => {
-    if (!session || session.status === "unauthenticated") {
-      return "Welcome. Please sign in";
+    if (session.status === "authenticated") {
+      return "Welcome " + session.data?.user?.name;
     } else if (session.status === "loading") {
       return "Loading...";
     } else {
-      return "Welcome " + session.data?.user?.name;
+      return "Welcome. Please sign in";
     }
   };
-
-  const landingText = getLandingText();
-
+  
   return (
-    <Box>
+    <Flex justifyContent='center'>
       <Text
         fontSize="5xl"
         fontWeight="semibold"
         textAlign="center"
         color="gray.900"
       >
-        {landingText}
+        {getLandingText()}
       </Text>
-      ;
-    </Box>
+    </Flex>
   );
 };
 

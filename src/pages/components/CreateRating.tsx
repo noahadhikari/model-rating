@@ -1,10 +1,8 @@
 import {
-  Box,
   Button,
   Flex,
   FormControl,
   FormLabel,
-  Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -94,7 +92,7 @@ const CreateRating = (props: CreateRatingProps) => {
           onChange={(e) => setReasoning(e.target.value)}
         />
       </FormControl>
-      <Button w="100%" colorScheme="green" mt={2} onClick={handleSubmit}>
+      <Button w="100%" colorScheme="green" mt={2} onClick={handleSubmit} isLoading={createRatingMutation.isLoading}>
         Submit
       </Button>
     </Flex>

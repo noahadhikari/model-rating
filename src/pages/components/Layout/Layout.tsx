@@ -9,8 +9,6 @@ interface LayoutProps {
 
 /**
  * Layout component that wraps all pages.
- * Provides a navbar and ensures that the user is logged in and authorized.
- * Also configures Ably.
  */
 const Layout = (props: LayoutProps) => {
   const { children } = props;
@@ -21,7 +19,6 @@ const Layout = (props: LayoutProps) => {
         <title>Model Rating</title>
         <meta name="Model Ratings" content="Rate models" />
       </Head>
-
       <Flex h="100%" direction="column">
         <HeaderBar />
 		{children}

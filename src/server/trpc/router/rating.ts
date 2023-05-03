@@ -29,6 +29,18 @@ export const ratingRouter = router({
       });
     }),
 
+  getModelRatingByUser: protectedProcedure
+    .input(z.object({ modelId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const rating = await ctx.prisma.rating.findFirst({
+        where: {
+          modelId: input.modelId,
+          userId: ctx.session.user.id,
+        },
+      });
+      return rating;
+    }),
+
   createRatingFromName: protectedProcedure
     .input(
       z.object({
@@ -140,7 +152,7 @@ export const ratingRouter = router({
   getRatingsWithPage: publicProcedure
     .input(z.object({ page: z.number() }))
     .query(async ({ ctx, input }) => {
-	  // Page size is 50
+      // Page size is 50
       const ratings = await ctx.prisma.rating.findMany({
         skip: (input.page - 1) * 50,
         take: 50,
