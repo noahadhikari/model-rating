@@ -8,6 +8,7 @@ const HeaderBar = () => {
   const session = useSession();
   const nextFewestRated = trpc.model.getFewestRatedModel.useQuery({}, {
     refetchOnWindowFocus: false,
+	enabled: session?.status === "authenticated",
   });
 
   const getSignInComponent = () => {
@@ -66,11 +67,11 @@ const HeaderBar = () => {
             </Text>
           </Link>
           <Divider orientation="vertical" height="50px" ml={4} />
-        </Flex>
-
+        </Flex> 
+		{/* VIsible if status === ' */}
         <Flex alignItems="center" display={["none", "none", "flex", "flex"]}>
           <Stack direction="row" spacing={5} alignItems="center">
-            <Spinner hidden={session && !!nextFewestRated.data} />
+            <Spinner hidden={!nextFewestRated.isLoading || session.status === 'unauthenticated'} />
             <Text
               color="gray.200"
               onClick={handleNextFewestRated}
